@@ -325,26 +325,62 @@ class Figure(ipywebrtc.MediaStream):
         xy = screen_h[:2] / screen_h[3]
         return xy
 
+
 def volshow(*args, **kwargs):
     """Deprecated: please use ipyvolume.quickvolshow or use the ipyvolume.pylab interface"""
     warnings.warn("Please use ipyvolume.quickvolshow or use the ipyvolume.pylab interface", DeprecationWarning, stacklevel=2)
     return quickvolshow(*args, **kwargs)
 
+
 def quickquiver(x, y, z, u, v, w, **kwargs):
+    """Visualize , generating a new ipyvolume figure.
+
+    :param x: x-coordinate origin values of quiverplot arrow markers, as a 1D numpy array with length equal to the number of arrows
+    :type x: ndarray
+    :param y: y-coordinate origin values of quiverplot arrow markers, as a 1D numpy array with length equal to the number of arrows
+    :type y: ndarray
+    :param z: z-coordinate origin values of quiverplot arrow markers, as a 1D numpy array with length equal to the number of arrows
+    :type z: ndarray
+    :param u: unit vector component in x-direction, as a 1D numpy array with length equal to the number of arrows in the quiver plot.
+    :type u: ndarray
+    :param v: unit vector component in y-direction, as a 1D numpy array with length equal to the number of arrows in the quiver plot.
+    :type v: ndarray
+    :param w: unit vector component in z-direction, as a 1D numpy array with length equal to the number of arrows in the quiver plot.
+    :type w: ndarray
+    :return: ipyvolume current container
+    """
     ipv.figure()
     ipv.quiver(x, y, z, u, v, w, **kwargs)
     return ipv.gcc()
 
+
 def quickscatter(x, y, z, **kwargs):
+    """Visualize scatter points in 3D space, generating a new ipyvolume figure.
+
+    :param x: x-coordinate values of scatter points, as a 1D numpy array with length equal to the number of scatter markers
+    :type x: ndarray
+    :param y: y-coordinate values of scatter points, as a 1D numpy array with length equal to the number of scatter markers
+    :type y: ndarray
+    :param z: z-coordinate values of scatter points, as a 1D numpy array with length equal to the number of scatter markers
+    :type z: ndarray
+    :param `**kwargs`: keyword arguments for the ipyvolume.scatter() method
+    :return: ipyvolume current container
+
+    >>> import ipyvolume as ipv
+    >>> import numpy as np
+    >>> x, y, z = np.random.random((3, 1000))
+    >>> ipv.quickscatter(x, y, z)
+    """
     ipv.figure()
     ipv.scatter(x, y, z, **kwargs)
     return ipv.gcc()
 
 
-def quickvolshow(data, lighting=False, data_min=None, data_max=None,  max_shape=256,
-            level=[0.1, 0.5, 0.9], opacity=[0.01, 0.05, 0.1], level_width=0.1, extent=None, memorder='C', **kwargs):
-    """
-    Visualize a 3d array using volume rendering
+def quickvolshow(data, lighting=False, data_min=None, data_max=None,
+                 max_shape=256, level=[0.1, 0.5, 0.9],
+                 opacity=[0.01, 0.05, 0.1], level_width=0.1, extent=None,
+                 memorder='C', **kwargs):
+    """Visualize a 3d array using volume rendering.
 
     :param data: 3d numpy array
     :param lighting: boolean, to use lighting or not, if set to false, lighting parameters will be overriden
@@ -357,21 +393,38 @@ def quickvolshow(data, lighting=False, data_min=None, data_max=None,  max_shape=
     :param level_width: width of the (gaussian) bumps where the opacity peaks, scalar or sequence of max length 3
     :param kwargs: extra argument passed to Volume and default transfer function
     :return:
-
     """
     ipv.figure()
-    ipv.volshow(data, lighting=lighting, data_min=data_min, data_max=data_max, max_shape=max_shape,
-        level=level, opacity=opacity, level_width=level_width, extent=extent,  memorder=memorder, **kwargs)
+    ipv.volshow(data, lighting=lighting, data_min=data_min, data_max=data_max,
+                max_shape=max_shape, level=level, opacity=opacity,
+                level_width=level_width, extent=extent,  memorder=memorder,
+                **kwargs)
     return ipv.gcc()
 
+
 def scatter(x, y, z, color=(1,0,0), s=0.01):
-    global _last_figure;
+    """Visualize scatter points in 3D space, using the current figure window.
+
+    :param x: x-coordinate values of scatter points, as a 1D numpy array with length equal to the number of scatter markers
+    :type x: ndarray
+    :param y: y-coordinate values of scatter points, as a 1D numpy array with length equal to the number of scatter markers
+    :type y: ndarray
+    :param z: x-coordinate values of scatter points, as a 1D numpy array with length equal to the number of scatter markers
+    :type z: ndarray
+    :param color: Tuple of RGB values for color of scatter points, defaults to (1,0,0) which is red
+    :type color: tuple, optional
+    :param s: size of scatter point markers, defaults to 0.01
+    :type s: float, optional
+    :return: ipyvolume figure object
+    """
+    global _last_figure
     fig = _last_figure
     if fig is None:
         fig = volshow(None)
     fig.scatter = Scatter(x=x, y=y, z=z, color=color, size=s)
     fig.volume.scatter = fig.scatter
     return fig
+
 
 # add all help strings to the __doc__ for the api docstrings
 for name, cls in list(vars().items()):
