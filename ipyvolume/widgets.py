@@ -23,8 +23,7 @@ import traitlets
 from traitlets import Unicode, Integer
 from traittypes import Array
 
-import ipyvolume
-import ipyvolume as ipv  # we should not have ipyvolume under two names either
+import ipyvolume as ipv
 import ipyvolume._version
 from ipyvolume.traittypes import Image
 from ipyvolume.serialize import (
@@ -378,7 +377,7 @@ class Figure(ipywebrtc.MediaStream):
     ylabel = traitlets.Unicode("y").tag(sync=True)
     zlabel = traitlets.Unicode("z").tag(sync=True)
 
-    style = traitlets.Dict(default_value=ipyvolume.styles.default).tag(sync=True)
+    style = traitlets.Dict(default_value=ipv.styles.default).tag(sync=True)
 
     render_continuous = traitlets.Bool(False).tag(sync=True)
     selector = traitlets.Unicode(default_value="lasso").tag(sync=True)
