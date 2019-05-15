@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 import numpy as np
-import ipywidgets as widgets  # we should not have widgets under two names
+import ipywidgets
 import traitlets
 from traitlets import Unicode
 from traittypes import Array
@@ -24,8 +24,8 @@ x = np.linspace(0, 1, N, endpoint=True)
 semver_range_frontend = "~" + ipyvolume._version.__version_js__
 
 
-@widgets.register
-class TransferFunction(widgets.DOMWidget):
+@ipywidgets.register
+class TransferFunction(ipywidgets.DOMWidget):
     _model_name = Unicode("TransferFunctionModel").tag(sync=True)
     _view_name = Unicode("TransferFunctionView").tag(sync=True)
     _model_module = Unicode("ipyvolume").tag(sync=True)
@@ -52,7 +52,7 @@ class TransferFunctionJsBumps(TransferFunction):
     )
 
     def control(self, max_opacity=0.2):
-        return widgets.VBox()
+        return ipywidgets.VBox()
 
 
 class TransferFunctionWidgetJs3(TransferFunction):
@@ -69,28 +69,28 @@ class TransferFunctionWidgetJs3(TransferFunction):
     width3 = traitlets.Float(0.1).tag(sync=True)
 
     def control(self, max_opacity=0.2):
-        l1 = widgets.FloatSlider(min=0, max=1, step=0.001, value=self.level1)
-        l2 = widgets.FloatSlider(min=0, max=1, step=0.001, value=self.level2)
-        l3 = widgets.FloatSlider(min=0, max=1, step=0.001, value=self.level3)
-        o1 = widgets.FloatSlider(
+        l1 = ipywidgets.FloatSlider(min=0, max=1, step=0.001, value=self.level1)
+        l2 = ipywidgets.FloatSlider(min=0, max=1, step=0.001, value=self.level2)
+        l3 = ipywidgets.FloatSlider(min=0, max=1, step=0.001, value=self.level3)
+        o1 = ipywidgets.FloatSlider(
             min=0, max=max_opacity, step=0.001, value=self.opacity1
         )
-        o2 = widgets.FloatSlider(
+        o2 = ipywidgets.FloatSlider(
             min=0, max=max_opacity, step=0.001, value=self.opacity2
         )
-        o3 = widgets.FloatSlider(
+        o3 = ipywidgets.FloatSlider(
             min=0, max=max_opacity, step=0.001, value=self.opacity2
         )
-        widgets.jslink((self, "level1"), (l1, "value"))
-        widgets.jslink((self, "level2"), (l2, "value"))
-        widgets.jslink((self, "level3"), (l3, "value"))
-        widgets.jslink((self, "opacity1"), (o1, "value"))
-        widgets.jslink((self, "opacity2"), (o2, "value"))
-        widgets.jslink((self, "opacity3"), (o3, "value"))
-        return widgets.VBox(
+        ipywidgets.jslink((self, "level1"), (l1, "value"))
+        ipywidgets.jslink((self, "level2"), (l2, "value"))
+        ipywidgets.jslink((self, "level3"), (l3, "value"))
+        ipywidgets.jslink((self, "opacity1"), (o1, "value"))
+        ipywidgets.jslink((self, "opacity2"), (o2, "value"))
+        ipywidgets.jslink((self, "opacity3"), (o3, "value"))
+        return ipywidgets.VBox(
             [
-                widgets.HBox([widgets.Label(value="levels:"), l1, l2, l3]),
-                widgets.HBox([widgets.Label(value="opacities:"), o1, o2, o3]),
+                ipywidgets.HBox([ipywidgets.Label(value="levels:"), l1, l2, l3]),
+                ipywidgets.HBox([ipywidgets.Label(value="opacities:"), o1, o2, o3]),
             ]
         )
 
@@ -144,27 +144,27 @@ class TransferFunctionWidget3(TransferFunction):
         self.rgba = rgba
 
     def control(self, max_opacity=0.2):
-        l1 = widgets.FloatSlider(min=0, max=1, value=self.level1)
-        l2 = widgets.FloatSlider(min=0, max=1, value=self.level2)
-        l3 = widgets.FloatSlider(min=0, max=1, value=self.level3)
-        o1 = widgets.FloatSlider(
+        l1 = ipywidgets.FloatSlider(min=0, max=1, value=self.level1)
+        l2 = ipywidgets.FloatSlider(min=0, max=1, value=self.level2)
+        l3 = ipywidgets.FloatSlider(min=0, max=1, value=self.level3)
+        o1 = ipywidgets.FloatSlider(
             min=0, max=max_opacity, step=0.001, value=self.opacity1
         )
-        o2 = widgets.FloatSlider(
+        o2 = ipywidgets.FloatSlider(
             min=0, max=max_opacity, step=0.001, value=self.opacity2
         )
-        o3 = widgets.FloatSlider(
+        o3 = ipywidgets.FloatSlider(
             min=0, max=max_opacity, step=0.001, value=self.opacity2
         )
-        widgets.jslink((self, "level1"), (l1, "value"))
-        widgets.jslink((self, "level2"), (l2, "value"))
-        widgets.jslink((self, "level3"), (l3, "value"))
-        widgets.jslink((self, "opacity1"), (o1, "value"))
-        widgets.jslink((self, "opacity2"), (o2, "value"))
-        widgets.jslink((self, "opacity3"), (o3, "value"))
-        return widgets.VBox(
+        ipywidgets.jslink((self, "level1"), (l1, "value"))
+        ipywidgets.jslink((self, "level2"), (l2, "value"))
+        ipywidgets.jslink((self, "level3"), (l3, "value"))
+        ipywidgets.jslink((self, "opacity1"), (o1, "value"))
+        ipywidgets.jslink((self, "opacity2"), (o2, "value"))
+        ipywidgets.jslink((self, "opacity3"), (o3, "value"))
+        return ipywidgets.VBox(
             [
-                widgets.HBox([widgets.Label(value="levels:"), l1, l2, l3]),
-                widgets.HBox([widgets.Label(value="opacities:"), o1, o2, o3]),
+                ipywidgets.HBox([ipywidgets.Label(value="levels:"), l1, l2, l3]),
+                ipywidgets.HBox([ipywidgets.Label(value="opacities:"), o1, o2, o3]),
             ]
         )
