@@ -31,12 +31,18 @@ def xyz(shape=128, limits=[-3, 3], spherical=False, sparse=True, centers=False):
         limits = [limits] * dim
     if centers:
         v = [
-            slice(vmin + (vmax - vmin) / float(N) / 2, vmax - (vmax - vmin) / float(N) / 4, (vmax - vmin) / float(N))
+            slice(
+                vmin + (vmax - vmin) / float(N) / 2,
+                vmax - (vmax - vmin) / float(N) / 4,
+                (vmax - vmin) / float(N),
+            )
             for (vmin, vmax), N in zip(limits, shape)
         ]
     else:
         v = [
-            slice(vmin, vmax + (vmax - vmin) / float(N) / 2, (vmax - vmin) / float(N - 1))
+            slice(
+                vmin, vmax + (vmax - vmin) / float(N) / 2, (vmax - vmin) / float(N - 1)
+            )
             for (vmin, vmax), N in zip(limits, shape)
         ]
     if sparse:
@@ -58,7 +64,9 @@ def example_ylm(m=0, n=2, shape=128, limits=[-4, 4], draw=True, show=True, **kwa
 
     __, __, __, r, theta, phi = xyz(shape=shape, limits=limits, spherical=True)
     radial = np.exp(-(r - 2) ** 2)
-    data = np.abs(scipy.special.sph_harm(m, n, theta, phi) ** 2) * radial  # pylint: disable=no-member
+    data = (
+        np.abs(scipy.special.sph_harm(m, n, theta, phi) ** 2) * radial
+    )  # pylint: disable=no-member
     if draw:
         vol = p3.volshow(data=data, **kwargs)
         if show:
@@ -113,7 +121,9 @@ def klein_bottle(
     u, v = np.meshgrid(u, v)
     if both:
         x1, y1, z1, _u1, _v1 = klein_bottle(endpoint=endpoint, draw=False, show=False)
-        x2, y2, z2, _u2, _v2 = klein_bottle(endpoint=endpoint, draw=False, show=False, figure8=True)
+        x2, y2, z2, _u2, _v2 = klein_bottle(
+            endpoint=endpoint, draw=False, show=False, figure8=True
+        )
         x = [x1, x2]
         y = [y1, y2]
         z = [z1, z2]
@@ -128,7 +138,11 @@ def klein_bottle(
             z = s * (sin(u / 2) * sin(v) + cos(u / 2) * sin(2 * v) / 2)
         else:
             r = 4 * (1 - cos(u) / 2)
-            x = 6 * cos(u) * (1 + sin(u)) + r * cos(u) * cos(v) * (u < pi) + r * cos(v + pi) * (u >= pi)
+            x = (
+                6 * cos(u) * (1 + sin(u))
+                + r * cos(u) * cos(v) * (u < pi)
+                + r * cos(v + pi) * (u >= pi)
+            )
             y = 16 * sin(u) + r * sin(u) * cos(v) * (u < pi)
             z = r * sin(v)
     if draw:
@@ -147,7 +161,15 @@ def klein_bottle(
                 texture=texture,
             )
         else:
-            mesh = p3.plot_mesh(x, y, z, wrapx=not endpoint, wrapy=not endpoint, wireframe=wireframe, texture=texture)
+            mesh = p3.plot_mesh(
+                x,
+                y,
+                z,
+                wrapx=not endpoint,
+                wrapy=not endpoint,
+                wireframe=wireframe,
+                texture=texture,
+            )
         if show:
             if both:
                 p3.animation_control(mesh, interval=interval)
@@ -159,7 +181,15 @@ def klein_bottle(
 
 
 def brain(
-    draw=True, show=True, fiducial=True, flat=True, inflated=True, subject='S1', interval=1000, uv=True, color=None
+    draw=True,
+    show=True,
+    fiducial=True,
+    flat=True,
+    inflated=True,
+    subject="S1",
+    interval=1000,
+    uv=True,
+    color=None,
 ):
     """Show a human brain model.
 
@@ -172,7 +202,9 @@ def brain(
     try:
         import cortex
     except:
-        warnings.warn("it seems pycortex is not installed, which is needed for this example")
+        warnings.warn(
+            "it seems pycortex is not installed, which is needed for this example"
+        )
         raise
     xlist, ylist, zlist = [], [], []
     polys_list = []
@@ -187,7 +219,7 @@ def brain(
         return (x - x.min()) / x.ptp()
 
     if fiducial or color is True:
-        pts, polys = cortex.db.get_surf('S1', 'fiducial', merge=True)
+        pts, polys = cortex.db.get_surf("S1", "fiducial", merge=True)
         x, y, z = pts.T
         r = n(x)
         g = n(y)
@@ -202,10 +234,10 @@ def brain(
         if color is False:
             color = None
     if inflated:
-        add(*cortex.db.get_surf('S1', 'inflated', merge=True, nudge=True))
+        add(*cortex.db.get_surf("S1", "inflated", merge=True, nudge=True))
     u = v = None
     if flat or uv:
-        pts, polys = cortex.db.get_surf('S1', 'flat', merge=True, nudge=True)
+        pts, polys = cortex.db.get_surf("S1", "flat", merge=True, nudge=True)
         x, y, z = pts.T
         u = n(x)
         v = n(y)
@@ -237,13 +269,18 @@ def head(draw=True, show=True, max_shape=256):
 
     # First part is a simpler version of setting up the transfer function. Interpolation with higher order
     # splines does not work well, the original must do sth different
-    colors = [[0.91, 0.7, 0.61, 0.0], [0.91, 0.7, 0.61, 80.0], [1.0, 1.0, 0.85, 82.0], [1.0, 1.0, 0.85, 256]]
+    colors = [
+        [0.91, 0.7, 0.61, 0.0],
+        [0.91, 0.7, 0.61, 80.0],
+        [1.0, 1.0, 0.85, 82.0],
+        [1.0, 1.0, 0.85, 256],
+    ]
     x = np.array([k[-1] for k in colors])
     rgb = np.array([k[:3] for k in colors])
     N = 256
     xnew = np.linspace(0, 256, N)
     tf_data = np.zeros((N, 4))
-    kind = 'linear'
+    kind = "linear"
     for channel in range(3):
         f = interp1d(x, rgb[:, channel], kind=kind)
         ynew = f(xnew)
@@ -266,7 +303,7 @@ def head(draw=True, show=True, max_shape=256):
         return head_data
 
 
-def gaussian(N=1000, draw=True, show=True, seed=42, color=None, marker='sphere'):
+def gaussian(N=1000, draw=True, show=True, seed=42, color=None, marker="sphere"):
     """Show N random gaussian distributed points using a scatter plot."""
     import ipyvolume as ipv
 
