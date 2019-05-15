@@ -16,8 +16,8 @@ class MovieMaker(object):
         positions=None,
         quaternions=None,
         times=None,
-        filename_camera='moviemaker.json',
-        filename_movie='movie.webm',
+        filename_camera="moviemaker.json",
+        filename_movie="movie.webm",
         overwrite_video=False,
     ):
         self.stream = stream
@@ -27,21 +27,21 @@ class MovieMaker(object):
         self.filename_movie = filename_movie
         self.overwrite_video = overwrite_video
         self.button_record = widgets.ToggleButton(
-            description='Record', icon='circle', value=False
+            description="Record", icon="circle", value=False
         )  # , style={'font-color': 'red'})
-        widgets.jslink((self.button_record, 'value'), (self.recorder, 'recording'))
-        self.recorder.video.observe(lambda *x: self.write_movie(), 'value')
-        self.button_add = widgets.Button(description='Add')
+        widgets.jslink((self.button_record, "value"), (self.recorder, "recording"))
+        self.recorder.video.observe(lambda *x: self.write_movie(), "value")
+        self.button_add = widgets.Button(description="Add")
         self.button_add.on_click(lambda *x: self.add())
-        self.button_replace = widgets.Button(description='Replace')
+        self.button_replace = widgets.Button(description="Replace")
         self.button_replace.on_click(lambda *x: self.replace())
-        self.button_remove = widgets.Button(description='Remove')
+        self.button_remove = widgets.Button(description="Remove")
         self.button_remove.on_click(lambda *x: self.remove())
-        self.button_save = widgets.Button(description='Save')
+        self.button_save = widgets.Button(description="Save")
         self.button_save.on_click(lambda *x: self.save())
-        self.button_load = widgets.Button(description='Load')
+        self.button_load = widgets.Button(description="Load")
         self.button_load.on_click(lambda *x: self.load())
-        self.select_keyframes = widgets.Select(description='Keyframes')
+        self.select_keyframes = widgets.Select(description="Keyframes")
         self.positions = []
         self.quaternions = []
         self.times = []
@@ -49,14 +49,16 @@ class MovieMaker(object):
         self.output = widgets.Output()
 
         self.options_interpolation = [
-            ('discrete', 'InterpolateDiscrete'),
-            ('linear', 'InterpolateLinear'),
-            ('smooth', 'InterpolateSmooth'),
+            ("discrete", "InterpolateDiscrete"),
+            ("linear", "InterpolateLinear"),
+            ("smooth", "InterpolateSmooth"),
         ]
-        self.select_interpolation = widgets.Dropdown(options=self.options_interpolation, index=1)
+        self.select_interpolation = widgets.Dropdown(
+            options=self.options_interpolation, index=1
+        )
 
-        self.select_interpolation.observe(lambda x: self.update_keyframes(), 'index')
-        self.select_keyframes.observe(lambda x: self.sync_camera(), 'index')
+        self.select_interpolation.observe(lambda x: self.update_keyframes(), "index")
+        self.select_keyframes.observe(lambda x: self.sync_camera(), "index")
         if positions is None and quaternions is None and times is None:
             if os.path.exists(self.filename_camera):
                 self.load()
@@ -67,7 +69,9 @@ class MovieMaker(object):
             self.update_keyframes()
 
         box_io = widgets.HBox([self.button_save, self.button_load])
-        box_control = widgets.HBox([self.button_add, self.button_replace, self.button_remove])
+        box_control = widgets.HBox(
+            [self.button_add, self.button_replace, self.button_remove]
+        )
         self.widget_main = widgets.VBox(
             [
                 self.button_record,
@@ -93,13 +97,13 @@ class MovieMaker(object):
             if not self.overwrite_video and os.path.exists(filename):
                 name, ext = os.path.splitext(filename)
                 i = 1
-                filename = name + '_' + str(i) + ext
+                filename = name + "_" + str(i) + ext
                 while os.path.exists(filename):
                     i += 1
-                    filename = name + '_' + str(i) + ext
-            with open(filename, 'wb') as f:
+                    filename = name + "_" + str(i) + ext
+            with open(filename, "wb") as f:
                 f.write(self.recorder.video.value)
-            print('wrote', filename)
+            print("wrote", filename)
 
     def add(self):
         p = self.camera.position
@@ -137,18 +141,25 @@ class MovieMaker(object):
 
     def save(self, filename=None):
         filename = filename or self.filename_camera
-        with open(filename, 'w') as f:
-            json.dump(dict(positions=self.positions, quaternions=self.quaternions, times=self.times), f)
-        print('wrote', filename)
+        with open(filename, "w") as f:
+            json.dump(
+                dict(
+                    positions=self.positions,
+                    quaternions=self.quaternions,
+                    times=self.times,
+                ),
+                f,
+            )
+        print("wrote", filename)
 
     def load(self, filename=None):
         filename = filename or self.filename_camera
         with open(filename) as f:
             data = json.load(f)
-            self.positions = data['positions']
-            self.quaternions = data['quaternions']
-            self.times = data['times']
-        print('loaded', filename)
+            self.positions = data["positions"]
+            self.quaternions = data["quaternions"]
+            self.times = data["times"]
+        print("loaded", filename)
         self.update_keyframes()
 
     def format_keyframe(self, time, p, q):
@@ -162,23 +173,32 @@ class MovieMaker(object):
         with self.output:
             options = [
                 (self.format_keyframe(t, p, q), i)
-                for i, (t, p, q) in enumerate(zip(self.times, self.positions, self.quaternions))
+                for i, (t, p, q) in enumerate(
+                    zip(self.times, self.positions, self.quaternions)
+                )
             ]
             self.select_keyframes.options = options
             self.position_track = pythreejs.VectorKeyframeTrack(
-                name='.position', times=self.times, values=self.positions, interpolation=self.select_interpolation.value
+                name=".position",
+                times=self.times,
+                values=self.positions,
+                interpolation=self.select_interpolation.value,
             )
             self.rotation_track = pythreejs.QuaternionKeyframeTrack(
-                name='.quaternion',
+                name=".quaternion",
                 times=self.times,
                 values=self.quaternions,
                 interpolation=self.select_interpolation.value,
             )
 
             if len(self.positions):
-                self.camera_clip = pythreejs.AnimationClip(tracks=[self.position_track, self.rotation_track])
+                self.camera_clip = pythreejs.AnimationClip(
+                    tracks=[self.position_track, self.rotation_track]
+                )
                 self.mixer = pythreejs.AnimationMixer(self.camera)
-                self.camera_action = pythreejs.AnimationAction(self.mixer, self.camera_clip, self.camera)
+                self.camera_action = pythreejs.AnimationAction(
+                    self.mixer, self.camera_clip, self.camera
+                )
                 self.camera_action_box.children = [self.camera_action]
             else:
                 self.camera_action_box.children = []
@@ -190,7 +210,9 @@ class MovieMaker(object):
 
     def show(self):
         box_io = widgets.HBox([self.button_save, self.button_load])
-        box_control = widgets.HBox([self.button_add, self.button_replace, self.button_remove])
+        box_control = widgets.HBox(
+            [self.button_add, self.button_replace, self.button_remove]
+        )
         display(
             widgets.VBox(
                 [
