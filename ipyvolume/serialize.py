@@ -59,7 +59,7 @@ def image_to_url(image, widget):
 
 def texture_to_json(texture, widget):
     if isinstance(texture, ipywebrtc.HasStream):
-        return ipywidgets.widget_serialization['to_json'](texture, widget)
+        return ipywidgets.widget_serialization["to_json"](texture, widget)
     else:
         return image_to_url(texture, widget)
 
@@ -72,7 +72,10 @@ def _compute_tile_size(shape):
     # TODO: we need to be a bit smarter here, for large grids we need to
     slices = shape[0]
     approx_rows = int(round(math.sqrt(slices)))
-    image_width = max(min_texture_width, min(max_texture_width, utils.next_power_of_2(approx_rows * shape[1])))
+    image_width = max(
+        min_texture_width,
+        min(max_texture_width, utils.next_power_of_2(approx_rows * shape[1])),
+    )
     columns = image_width // shape[2]
     rows = int(math.ceil(slices / columns))
     image_height = max(min_texture_width, utils.next_power_of_2(rows * shape[1]))
@@ -88,18 +91,25 @@ def _cube_to_tiles(grid, vmin, vmax):
     grid_normalized = (grid * 1.0 - vmin) / (vmax - vmin)
     grid_normalized[~np.isfinite(grid_normalized)] = 0
     gradient = np.gradient(grid_normalized)
-    with np.errstate(divide='ignore'):
-        gradient = gradient / np.sqrt(gradient[0] ** 2 + gradient[1] ** 2 + gradient[2] ** 2)
+    with np.errstate(divide="ignore"):
+        gradient = gradient / np.sqrt(
+            gradient[0] ** 2 + gradient[1] ** 2 + gradient[2] ** 2
+        )
         # intensity_normalized = (np.log(self.data3d + 1.) - np.log(mi)) / (np.log(ma) - np.log(mi));
     for y2d in range(rows):
         for x2d in range(columns):
             zindex = x2d + y2d * columns
             if zindex < slices:
                 Im = grid_normalized[zindex]
-                subdata = data[y2d * Im.shape[0] : (y2d + 1) * Im.shape[0], x2d * Im.shape[1] : (x2d + 1) * Im.shape[1]]
+                subdata = data[
+                    y2d * Im.shape[0] : (y2d + 1) * Im.shape[0],
+                    x2d * Im.shape[1] : (x2d + 1) * Im.shape[1],
+                ]
                 subdata[..., 3] = (Im * 255).astype(np.uint8)
                 for i in range(3):
-                    subdata[..., i] = ((gradient[i][zindex] / 2.0 + 0.5) * 255).astype(np.uint8)
+                    subdata[..., i] = ((gradient[i][zindex] / 2.0 + 0.5) * 255).astype(
+                        np.uint8
+                    )
                     # for i in range(3):
                     # 	subdata[...,i+1] = subdata[...,0]
     tile_shape = (grid.shape[2], grid.shape[1])
@@ -112,7 +122,9 @@ def cube_to_png(grid, vmin, vmax, file):
     image_height, image_width, __ = tiles_data.shape
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        img = PIL.Image.frombuffer("RGBA", (image_width, image_height), tiles_data, 'raw')
+        img = PIL.Image.frombuffer(
+            "RGBA", (image_width, image_height), tiles_data, "raw"
+        )
         img.save(file, "png")
     return (image_width, image_height), tile_shape, rows, columns, slices
 
@@ -129,7 +141,9 @@ def tile_volume(vol, tex_size, tile_shape, vol_size):
             slice_data = vol[z]
             xoffset = tileX * vol_size[0]
             yoffset = tileY * vol_size[1]
-            tex[yoffset : yoffset + vol_size[1], xoffset : xoffset + vol_size[0]] = slice_data
+            tex[
+                yoffset : yoffset + vol_size[1], xoffset : xoffset + vol_size[0]
+            ] = slice_data
     # debug image saving
     # scipy.misc.toimage(tex, cmin=tex.min(), cmax=tex.max()).save('outfile.png')
 
@@ -158,7 +172,10 @@ def volume_to_json_volume_tiled(vol, obj=None):
 
     if vol.ndim == 4:  # time series
         return {
-            "volume_data_tiled": [tile_volume(vol[t], tex_size, tile_shape, vol_shape) for t in range(vol.shape[0])],
+            "volume_data_tiled": [
+                tile_volume(vol[t], tex_size, tile_shape, vol_shape)
+                for t in range(vol.shape[0])
+            ],
             "shape": vol_shape,
             "tile_shape": tile_shape,
             "vol_tex_size": tex_size,
@@ -178,8 +195,12 @@ def cube_to_json(grid, obj=None):
     if grid is None or len(grid.shape) == 1:
         return None
     f = StringIO()
-    image_shape, slice_shape, rows, columns, slices = cube_to_png(grid, obj.data_min, obj.data_max, f)
-    image_url = "data:image/png;base64," + b64encode(f.getvalue()).decode("ascii")  # + "'"
+    image_shape, slice_shape, rows, columns, slices = cube_to_png(
+        grid, obj.data_min, obj.data_max, f
+    )
+    image_url = "data:image/png;base64," + b64encode(f.getvalue()).decode(
+        "ascii"
+    )  # + "'"
     json = {
         "image_shape": image_shape,
         "slice_shape": slice_shape,
@@ -194,7 +215,9 @@ def cube_to_json(grid, obj=None):
 def cube_to_tiles(grid, obj=None):
     if grid is None or len(grid.shape) == 1:
         return None
-    tiles_data, slice_shape, rows, columns, slices = _cube_to_tiles(grid, obj.data_min, obj.data_max)
+    tiles_data, slice_shape, rows, columns, slices = _cube_to_tiles(
+        grid, obj.data_min, obj.data_max
+    )
     image_height, image_width, __ = tiles_data.shape
     image_shape = image_width, image_height
     json = {
@@ -219,7 +242,7 @@ def array_to_json(ar, obj=None):
 def array_to_binary(ar, obj=None, force_contiguous=True):
     if ar is None:
         return None
-    if ar.dtype.kind not in ['u', 'i', 'f']:  # ints and floats
+    if ar.dtype.kind not in ["u", "i", "f"]:  # ints and floats
         raise ValueError("unsupported dtype: %s" % (ar.dtype))
     if ar.dtype == np.float64:  # WebGL does not support float64, case it here
         ar = ar.astype(np.float32)
@@ -227,11 +250,11 @@ def array_to_binary(ar, obj=None, force_contiguous=True):
         ar = ar.astype(np.int32)
     if force_contiguous and not ar.flags["C_CONTIGUOUS"]:  # make sure it's contiguous
         ar = np.ascontiguousarray(ar)
-    return {'data': memoryview(ar), 'dtype': str(ar.dtype), 'shape': ar.shape}
+    return {"data": memoryview(ar), "dtype": str(ar.dtype), "shape": ar.shape}
 
 
 def binary_to_array(value, obj=None):
-    return np.frombuffer(value['data'], dtype=value['dtype']).reshape(value['shape'])
+    return np.frombuffer(value["data"], dtype=value["dtype"]).reshape(value["shape"])
 
 
 def array_sequence_to_binary_or_json(ar, obj=None):
@@ -301,7 +324,9 @@ def create_array_binary_serialization(attrname, update_from_js=False):
         if update_from_js:  # for some values we may want updates from the js side
             return np.array(value)
         else:  # otherwise we probably get updates due to a bug in ipywidgets
-            return getattr(obj, attrname)  # ignore what we got send back, it is not supposed to be changing
+            return getattr(
+                obj, attrname
+            )  # ignore what we got send back, it is not supposed to be changing
 
     return dict(to_json=array_to_binary_or_json, from_json=from_json_to_array)
 
@@ -311,7 +336,9 @@ def create_array_cube_png_serialization(attrname, update_from_js=False):
         if update_from_js:  # for some values we may want updates from the js side
             return from_json(value)
         else:  # otherwise we probably get updates due to a bug in ipywidgets
-            return getattr(obj, attrname)  # ignore what we got send back, it is not supposed to be changing
+            return getattr(
+                obj, attrname
+            )  # ignore what we got send back, it is not supposed to be changing
 
     return dict(to_json=cube_to_json, from_json=fixed)
 
@@ -340,7 +367,9 @@ def color_to_binary_or_json(ar, obj=None):
         ones = np.ones(ar.shape[:-1])
         ar = np.stack([ar[..., 0], ar[..., 1], ar[..., 2], ones], axis=-1)
     elif ar.shape[-1] != 4:
-        raise ValueError('array should be of shape (...,3) or (...,4), not %r' % (ar.shape,))
+        raise ValueError(
+            "array should be of shape (...,3) or (...,4), not %r" % (ar.shape,)
+        )
 
     if dimension == 3:
         return [array_to_binary(ar[k]) for k in range(len(ar))]
@@ -353,10 +382,14 @@ def json_to_array(json, obj=None):
 
 
 color_serialization = dict(to_json=color_to_binary_or_json, from_json=None)
-array_sequence_serialization = dict(to_json=array_sequence_to_binary_or_json, from_json=json_to_array)
+array_sequence_serialization = dict(
+    to_json=array_sequence_to_binary_or_json, from_json=json_to_array
+)
 array_serialization = dict(to_json=array_to_binary_or_json, from_json=None)
 
-array_volume_tiled_serialization = dict(to_json=volume_to_json_volume_tiled, from_json=from_json)
+array_volume_tiled_serialization = dict(
+    to_json=volume_to_json_volume_tiled, from_json=from_json
+)
 
 array_cube_tile_serialization = dict(to_json=cube_to_tiles, from_json=from_json)
 # array_binary_serialization = dict(to_json=array_to_binary_or_json, from_json=from_json_to_array)
