@@ -2,7 +2,15 @@
 
 from __future__ import absolute_import
 
-__all__ = ['Mesh', 'Scatter', 'Volume', 'Figure', 'quickquiver', 'quickscatter', 'quickvolshow']
+__all__ = [
+    "Mesh",
+    "Scatter",
+    "Volume",
+    "Figure",
+    "quickquiver",
+    "quickscatter",
+    "quickvolshow",
+]
 
 import logging
 import warnings
@@ -37,19 +45,27 @@ semver_range_frontend = "~" + ipyvolume._version.__version_js__
 
 @widgets.register
 class Mesh(widgets.Widget):
-    _view_name = Unicode('MeshView').tag(sync=True)
-    _view_module = Unicode('ipyvolume').tag(sync=True)
-    _model_name = Unicode('MeshModel').tag(sync=True)
-    _model_module = Unicode('ipyvolume').tag(sync=True)
+    _view_name = Unicode("MeshView").tag(sync=True)
+    _view_module = Unicode("ipyvolume").tag(sync=True)
+    _model_name = Unicode("MeshModel").tag(sync=True)
+    _model_module = Unicode("ipyvolume").tag(sync=True)
     _view_module_version = Unicode(semver_range_frontend).tag(sync=True)
     _model_module_version = Unicode(semver_range_frontend).tag(sync=True)
     x = Array(default_value=None).tag(sync=True, **array_sequence_serialization)
     y = Array(default_value=None).tag(sync=True, **array_sequence_serialization)
     z = Array(default_value=None).tag(sync=True, **array_sequence_serialization)
-    u = Array(default_value=None, allow_none=True).tag(sync=True, **array_sequence_serialization)
-    v = Array(default_value=None, allow_none=True).tag(sync=True, **array_sequence_serialization)
-    triangles = Array(default_value=None, allow_none=True).tag(sync=True, **array_serialization)
-    lines = Array(default_value=None, allow_none=True).tag(sync=True, **array_serialization)
+    u = Array(default_value=None, allow_none=True).tag(
+        sync=True, **array_sequence_serialization
+    )
+    v = Array(default_value=None, allow_none=True).tag(
+        sync=True, **array_sequence_serialization
+    )
+    triangles = Array(default_value=None, allow_none=True).tag(
+        sync=True, **array_serialization
+    )
+    lines = Array(default_value=None, allow_none=True).tag(
+        sync=True, **array_serialization
+    )
     texture = traitlets.Union(
         [
             traitlets.Instance(ipywebrtc.MediaStream),
@@ -61,62 +77,85 @@ class Mesh(widgets.Widget):
     ).tag(sync=True, **texture_serialization)
 
     sequence_index = Integer(default_value=0).tag(sync=True)
-    color = Array(default_value="red", allow_none=True).tag(sync=True, **color_serialization)
+    color = Array(default_value="red", allow_none=True).tag(
+        sync=True, **color_serialization
+    )
     visible = traitlets.CBool(default_value=True).tag(sync=True)
 
     material = traitlets.Instance(
-        pythreejs.ShaderMaterial, help='A :any:`pythreejs.ShaderMaterial` that is used for the mesh'
+        pythreejs.ShaderMaterial,
+        help="A :any:`pythreejs.ShaderMaterial` that is used for the mesh",
     ).tag(sync=True, **widgets.widget_serialization)
 
-    @traitlets.default('material')
+    @traitlets.default("material")
     def _default_material(self):
         return pythreejs.ShaderMaterial(side=pythreejs.enums.Side.DoubleSide)
 
     line_material = traitlets.Instance(
-        pythreejs.ShaderMaterial, help='A :any:`pythreejs.ShaderMaterial` that is used for the lines/wireframe'
+        pythreejs.ShaderMaterial,
+        help="A :any:`pythreejs.ShaderMaterial` that is used for the lines/wireframe",
     ).tag(sync=True, **widgets.widget_serialization)
 
-    @traitlets.default('line_material')
+    @traitlets.default("line_material")
     def _default_line_material(self):
         return pythreejs.ShaderMaterial()
 
 
 @widgets.register
 class Scatter(widgets.Widget):
-    _view_name = Unicode('ScatterView').tag(sync=True)
-    _view_module = Unicode('ipyvolume').tag(sync=True)
-    _model_name = Unicode('ScatterModel').tag(sync=True)
-    _model_module = Unicode('ipyvolume').tag(sync=True)
+    _view_name = Unicode("ScatterView").tag(sync=True)
+    _view_module = Unicode("ipyvolume").tag(sync=True)
+    _model_name = Unicode("ScatterModel").tag(sync=True)
+    _model_module = Unicode("ipyvolume").tag(sync=True)
     _view_module_version = Unicode(semver_range_frontend).tag(sync=True)
     _model_module_version = Unicode(semver_range_frontend).tag(sync=True)
     x = Array(default_value=None).tag(sync=True, **array_sequence_serialization)
     y = Array(default_value=None).tag(sync=True, **array_sequence_serialization)
     z = Array(default_value=None).tag(sync=True, **array_sequence_serialization)
-    vx = Array(default_value=None, allow_none=True).tag(sync=True, **array_sequence_serialization)
-    vy = Array(default_value=None, allow_none=True).tag(sync=True, **array_sequence_serialization)
-    vz = Array(default_value=None, allow_none=True).tag(sync=True, **array_sequence_serialization)
-    selected = Array(default_value=None, allow_none=True).tag(sync=True, **array_sequence_serialization)
+    vx = Array(default_value=None, allow_none=True).tag(
+        sync=True, **array_sequence_serialization
+    )
+    vy = Array(default_value=None, allow_none=True).tag(
+        sync=True, **array_sequence_serialization
+    )
+    vz = Array(default_value=None, allow_none=True).tag(
+        sync=True, **array_sequence_serialization
+    )
+    selected = Array(default_value=None, allow_none=True).tag(
+        sync=True, **array_sequence_serialization
+    )
     sequence_index = Integer(default_value=0).tag(sync=True)
     size = traitlets.Union(
         [
-            Array(default_value=None, allow_none=True).tag(sync=True, **array_sequence_serialization),
+            Array(default_value=None, allow_none=True).tag(
+                sync=True, **array_sequence_serialization
+            ),
             traitlets.Float().tag(sync=True),
         ],
         default_value=5,
     ).tag(sync=True)
     size_selected = traitlets.Union(
         [
-            Array(default_value=None, allow_none=True).tag(sync=True, **array_sequence_serialization),
+            Array(default_value=None, allow_none=True).tag(
+                sync=True, **array_sequence_serialization
+            ),
             traitlets.Float().tag(sync=True),
         ],
         default_value=7,
     ).tag(sync=True)
-    color = Array(default_value="red", allow_none=True).tag(sync=True, **color_serialization)
+    color = Array(default_value="red", allow_none=True).tag(
+        sync=True, **color_serialization
+    )
     color_selected = traitlets.Union(
-        [Array(default_value=None, allow_none=True).tag(sync=True, **color_serialization), Unicode().tag(sync=True)],
+        [
+            Array(default_value=None, allow_none=True).tag(
+                sync=True, **color_serialization
+            ),
+            Unicode().tag(sync=True),
+        ],
         default_value="green",
     ).tag(sync=True)
-    geo = traitlets.Unicode('diamond').tag(sync=True)
+    geo = traitlets.Unicode("diamond").tag(sync=True)
     connected = traitlets.CBool(default_value=False).tag(sync=True)
     visible = traitlets.CBool(default_value=True).tag(sync=True)
 
@@ -131,18 +170,20 @@ class Scatter(widgets.Widget):
     ).tag(sync=True, **texture_serialization)
 
     material = traitlets.Instance(
-        pythreejs.ShaderMaterial, help='A :any:`pythreejs.ShaderMaterial` that is used for the mesh'
+        pythreejs.ShaderMaterial,
+        help="A :any:`pythreejs.ShaderMaterial` that is used for the mesh",
     ).tag(sync=True, **widgets.widget_serialization)
 
-    @traitlets.default('material')
+    @traitlets.default("material")
     def _default_material(self):
         return pythreejs.ShaderMaterial()
 
     line_material = traitlets.Instance(
-        pythreejs.ShaderMaterial, help='A :any:`pythreejs.ShaderMaterial` that is used for the lines/wireframe'
+        pythreejs.ShaderMaterial,
+        help="A :any:`pythreejs.ShaderMaterial` that is used for the lines/wireframe",
     ).tag(sync=True, **widgets.widget_serialization)
 
-    @traitlets.default('line_material')
+    @traitlets.default("line_material")
     def _default_line_material(self):
         return pythreejs.ShaderMaterial()
 
@@ -151,16 +192,20 @@ class Scatter(widgets.Widget):
 class Volume(widgets.Widget):
     """Widget class representing a volume (rendering) using three.js."""
 
-    _view_name = Unicode('VolumeView').tag(sync=True)
-    _view_module = Unicode('ipyvolume').tag(sync=True)
-    _model_name = Unicode('VolumeModel').tag(sync=True)
-    _model_module = Unicode('ipyvolume').tag(sync=True)
+    _view_name = Unicode("VolumeView").tag(sync=True)
+    _view_module = Unicode("ipyvolume").tag(sync=True)
+    _model_name = Unicode("VolumeModel").tag(sync=True)
+    _model_module = Unicode("ipyvolume").tag(sync=True)
     _view_module_version = Unicode(semver_range_frontend).tag(sync=True)
     _model_module_version = Unicode(semver_range_frontend).tag(sync=True)
 
-    data = Array(default_value=None, allow_none=True).tag(sync=True, **array_cube_tile_serialization)
+    data = Array(default_value=None, allow_none=True).tag(
+        sync=True, **array_cube_tile_serialization
+    )
     data_original = Array(default_value=None, allow_none=True)
-    data_max_shape = traitlets.CInt(None, allow_none=True)  # TODO: allow this to be a list
+    data_max_shape = traitlets.CInt(
+        None, allow_none=True
+    )  # TODO: allow this to be a list
     data_min = traitlets.CFloat(0).tag(sync=True)
     data_max = traitlets.CFloat(1).tag(sync=True)
     show_min = traitlets.CFloat(0).tag(sync=True)
@@ -169,14 +214,18 @@ class Volume(widgets.Widget):
     clamp_max = traitlets.CBool(False).tag(sync=True)
     opacity_scale = traitlets.CFloat(1.0).tag(sync=True)
     brightness = traitlets.CFloat(1.0).tag(sync=True)
-    tf = traitlets.Instance(TransferFunction, allow_none=True).tag(sync=True, **widgets.widget_serialization)
+    tf = traitlets.Instance(TransferFunction, allow_none=True).tag(
+        sync=True, **widgets.widget_serialization
+    )
     ray_steps = traitlets.CInt(
         None,
         allow_none=True,
-        help='defines the length of the ray (1/ray_steps) for each step, in normalized coordintes.',
+        help="defines the length of the ray (1/ray_steps) for each step, in normalized coordintes.",
     ).tag(sync=True)
 
-    rendering_method = traitlets.Enum(values=['NORMAL', 'MAX_INTENSITY'], default_value='NORMAL').tag(sync=True)
+    rendering_method = traitlets.Enum(
+        values=["NORMAL", "MAX_INTENSITY"], default_value="NORMAL"
+    ).tag(sync=True)
     lighting = traitlets.Bool(True).tag(sync=True)
 
     extent = traitlets.Any().tag(sync=True)
@@ -185,10 +234,10 @@ class Volume(widgets.Widget):
     def __init__(self, **kwargs):
         super(Volume, self).__init__(**kwargs)
         self._update_data()
-        self.observe(self.update_data, ['data_original', 'data_max_shape'])
+        self.observe(self.update_data, ["data_original", "data_max_shape"])
 
     def _listen_to(self, fig):
-        fig.observe(self.update_data, ['xlim', 'ylim', 'zlim'])
+        fig.observe(self.update_data, ["xlim", "ylim", "zlim"])
 
     @debounced(method=True)
     def update_data(self, change=None):
@@ -222,10 +271,10 @@ class Volume(widgets.Widget):
 class Figure(ipywebrtc.MediaStream):
     """Widget class representing a volume (rendering) using three.js."""
 
-    _view_name = Unicode('FigureView').tag(sync=True)
-    _view_module = Unicode('ipyvolume').tag(sync=True)
-    _model_name = Unicode('FigureModel').tag(sync=True)
-    _model_module = Unicode('ipyvolume').tag(sync=True)
+    _view_name = Unicode("FigureView").tag(sync=True)
+    _view_module = Unicode("ipyvolume").tag(sync=True)
+    _model_name = Unicode("FigureModel").tag(sync=True)
+    _model_module = Unicode("ipyvolume").tag(sync=True)
     _view_module_version = Unicode(semver_range_frontend).tag(sync=True)
     _model_module_version = Unicode(semver_range_frontend).tag(sync=True)
 
@@ -251,24 +300,36 @@ class Figure(ipywebrtc.MediaStream):
 
     stereo = traitlets.Bool(False).tag(sync=True)
 
-    camera_control = traitlets.Unicode(default_value='trackball').tag(sync=True)
+    camera_control = traitlets.Unicode(default_value="trackball").tag(sync=True)
     camera_fov = traitlets.CFloat(45, min=0.1, max=179.9).tag(sync=True)
-    camera_center = traitlets.List(traitlets.CFloat(), default_value=[0, 0, 0]).tag(sync=True)
+    camera_center = traitlets.List(traitlets.CFloat(), default_value=[0, 0, 0]).tag(
+        sync=True
+    )
     # Tuple(traitlets.CFloat(0), traitlets.CFloat(0), traitlets.CFloat(0)).tag(sync=True)
 
     camera = traitlets.Instance(
-        pythreejs.Camera, allow_none=True, help='A :any:`pythreejs.Camera` instance to control the camera'
+        pythreejs.Camera,
+        allow_none=True,
+        help="A :any:`pythreejs.Camera` instance to control the camera",
     ).tag(sync=True, **widgets.widget_serialization)
 
-    @traitlets.default('camera')
+    @traitlets.default("camera")
     def _default_camera(self):
         # see https://github.com/maartenbreddels/ipyvolume/pull/40 for an explanation
-        z = 2 * np.tan(45.0 / 2.0 * np.pi / 180) / np.tan(self.camera_fov / 2.0 * np.pi / 180)
-        return pythreejs.PerspectiveCamera(fov=self.camera_fov, position=(0, 0, z), width=400, height=500)
+        z = (
+            2
+            * np.tan(45.0 / 2.0 * np.pi / 180)
+            / np.tan(self.camera_fov / 2.0 * np.pi / 180)
+        )
+        return pythreejs.PerspectiveCamera(
+            fov=self.camera_fov, position=(0, 0, z), width=400, height=500
+        )
 
-    scene = traitlets.Instance(pythreejs.Scene, allow_none=True).tag(sync=True, **widgets.widget_serialization)
+    scene = traitlets.Instance(pythreejs.Scene, allow_none=True).tag(
+        sync=True, **widgets.widget_serialization
+    )
 
-    @traitlets.default('scene')
+    @traitlets.default("scene")
     def _default_scene(self):
         # could be removed when https://github.com/jovyan/pythreejs/issues/176 is solved
         # the default for pythreejs is white, which leads the volume rendering pass to make everything white
@@ -280,23 +341,37 @@ class Figure(ipywebrtc.MediaStream):
     pixel_ratio = traitlets.Float(
         None,
         allow_none=True,
-        help='Pixel ratio of the WebGL canvas (2 on retina screens). Set to 1 for better performance, but less crisp'
-        'edges. If set to None it will use the browser\'s window.devicePixelRatio.'
+        help="Pixel ratio of the WebGL canvas (2 on retina screens). Set to 1 for better performance, but less crisp"
+        "edges. If set to None it will use the browser's window.devicePixelRatio.",
     ).tag(sync=True)
     capture_fps = traitlets.CFloat(None, allow_none=True).tag(sync=True)
     cube_resolution = traitlets.CInt(512).tag(sync=True)
 
     show = traitlets.Unicode("Volume").tag(sync=True)  # for debugging
 
-    xlim = traitlets.List(traitlets.CFloat(), default_value=[0, 1], minlen=2, maxlen=2).tag(sync=True)
-    ylim = traitlets.List(traitlets.CFloat(), default_value=[0, 1], minlen=2, maxlen=2).tag(sync=True)
-    zlim = traitlets.List(traitlets.CFloat(), default_value=[0, 1], minlen=2, maxlen=2).tag(sync=True)
+    xlim = traitlets.List(
+        traitlets.CFloat(), default_value=[0, 1], minlen=2, maxlen=2
+    ).tag(sync=True)
+    ylim = traitlets.List(
+        traitlets.CFloat(), default_value=[0, 1], minlen=2, maxlen=2
+    ).tag(sync=True)
+    zlim = traitlets.List(
+        traitlets.CFloat(), default_value=[0, 1], minlen=2, maxlen=2
+    ).tag(sync=True)
 
     matrix_projection = traitlets.List(
-        traitlets.CFloat(), default_value=[0] * 16, allow_none=True, minlen=16, maxlen=16
+        traitlets.CFloat(),
+        default_value=[0] * 16,
+        allow_none=True,
+        minlen=16,
+        maxlen=16,
     ).tag(sync=True)
     matrix_world = traitlets.List(
-        traitlets.CFloat(), default_value=[0] * 16, allow_none=True, minlen=16, maxlen=16
+        traitlets.CFloat(),
+        default_value=[0] * 16,
+        allow_none=True,
+        minlen=16,
+        maxlen=16,
     ).tag(sync=True)
 
     xlabel = traitlets.Unicode("x").tag(sync=True)
@@ -306,10 +381,12 @@ class Figure(ipywebrtc.MediaStream):
     style = traitlets.Dict(default_value=ipyvolume.styles.default).tag(sync=True)
 
     render_continuous = traitlets.Bool(False).tag(sync=True)
-    selector = traitlets.Unicode(default_value='lasso').tag(sync=True)
-    selection_mode = traitlets.Unicode(default_value='replace').tag(sync=True)
-    mouse_mode = traitlets.Unicode(default_value='normal').tag(sync=True)
-    panorama_mode = traitlets.Enum(values=['no', '360', '180'], default_value='no').tag(sync=True)
+    selector = traitlets.Unicode(default_value="lasso").tag(sync=True)
+    selection_mode = traitlets.Unicode(default_value="replace").tag(sync=True)
+    mouse_mode = traitlets.Unicode(default_value="normal").tag(sync=True)
+    panorama_mode = traitlets.Enum(values=["no", "360", "180"], default_value="no").tag(
+        sync=True
+    )
 
     # xlim = traitlets.Tuple(traitlets.CFloat(0), traitlets.CFloat(1)).tag(sync=True)
     # y#lim = traitlets.Tuple(traitlets.CFloat(0), traitlets.CFloat(1)).tag(sync=True)
@@ -338,17 +415,24 @@ class Figure(ipywebrtc.MediaStream):
         ipv.figure(self._previous_figure)
         del self._previous_figure
 
-    def screenshot(self, width=None, height=None, mime_type='image/png'):
-        self.send({'msg': 'screenshot', 'width': width, 'height': height, 'mime_type': mime_type})
+    def screenshot(self, width=None, height=None, mime_type="image/png"):
+        self.send(
+            {
+                "msg": "screenshot",
+                "width": width,
+                "height": height,
+                "mime_type": mime_type,
+            }
+        )
 
     def on_screenshot(self, callback, remove=False):
         self._screenshot_handlers.register_callback(callback, remove=remove)
 
     def _handle_custom_msg(self, content, buffers):
-        if content.get('event', '') == 'screenshot':
-            self._screenshot_handlers(content['data'])
-        elif content.get('event', '') == 'selection':
-            self._selection_handlers(content['data'])
+        if content.get("event", "") == "screenshot":
+            self._screenshot_handlers(content["data"])
+        elif content.get("event", "") == "selection":
+            self._selection_handlers(content["data"])
 
     def on_selection(self, callback, remove=False):
         self._selection_handlers.register_callback(callback, remove=remove)
@@ -367,7 +451,9 @@ class Figure(ipywebrtc.MediaStream):
 def volshow(*args, **kwargs):
     """Deprecated: please use ipyvolume.quickvolshow or use the ipyvolume.pylab interface."""
     warnings.warn(
-        "Please use ipyvolume.quickvolshow or use the ipyvolume.pylab interface", DeprecationWarning, stacklevel=2
+        "Please use ipyvolume.quickvolshow or use the ipyvolume.pylab interface",
+        DeprecationWarning,
+        stacklevel=2,
     )
     return quickvolshow(*args, **kwargs)
 
@@ -394,7 +480,7 @@ def quickvolshow(
     opacity=[0.01, 0.05, 0.1],
     level_width=0.1,
     extent=None,
-    memorder='C',
+    memorder="C",
     **kwargs
 ):
     """Visualize a 3d array using volume rendering.
@@ -446,7 +532,7 @@ for name, cls in list(vars().items()):
     try:
         if issubclass(cls, traitlets.HasTraits):
             for trait_name, trait in cls.class_traits().items():
-                if 'help' in trait.metadata:
-                    trait.__doc__ = trait.metadata['help']
+                if "help" in trait.metadata:
+                    trait.__doc__ = trait.metadata["help"]
     except TypeError:
         pass
