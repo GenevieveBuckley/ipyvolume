@@ -26,7 +26,10 @@ html_template = u"""<!DOCTYPE html>
 
 
 def save_ipyvolumejs(
-    target="", devmode=False, version=ipyvolume._version.__version_js__, version3js=__version_threejs__
+    target="",
+    devmode=False,
+    version=ipyvolume._version.__version_js__,
+    version3js=__version_threejs__,
 ):
     """Output the ipyvolume javascript to a local file.
 
@@ -37,13 +40,15 @@ def save_ipyvolumejs(
 
     """
     url = "https://unpkg.com/ipyvolume@{version}/dist/index.js".format(version=version)
-    pyv_filename = 'ipyvolume_v{version}.js'.format(version=version)
+    pyv_filename = "ipyvolume_v{version}.js".format(version=version)
     pyv_filepath = os.path.join(target, pyv_filename)
 
-    devfile = os.path.join(os.path.abspath(ipyvolume.__path__[0]), "..", "js", "dist", "index.js")
+    devfile = os.path.join(
+        os.path.abspath(ipyvolume.__path__[0]), "..", "js", "dist", "index.js"
+    )
     if devmode:
         if not os.path.exists(devfile):
-            raise IOError('devmode=True but cannot find : {}'.format(devfile))
+            raise IOError("devmode=True but cannot find : {}".format(devfile))
         if target and not os.path.exists(target):
             os.makedirs(target)
         shutil.copy(devfile, pyv_filepath)
@@ -66,7 +71,9 @@ def save_requirejs(target="", version="2.3.4"):
     :type target: str
     :type version: str
     """
-    url = "https://cdnjs.cloudflare.com/ajax/libs/require.js/{version}/require.min.js".format(version=version)
+    url = "https://cdnjs.cloudflare.com/ajax/libs/require.js/{version}/require.min.js".format(
+        version=version
+    )
     filename = "require.min.v{0}.js".format(version)
     filepath = os.path.join(target, filename)
     download_to_file(url, filepath)
@@ -80,8 +87,10 @@ def save_embed_js(target="", version=wembed.__html_manager_version__):
     :type version: str
 
     """
-    url = u'https://unpkg.com/@jupyter-widgets/html-manager@{0:s}/dist/embed-amd.js'.format(version)
-    if version.startswith('^'):
+    url = u"https://unpkg.com/@jupyter-widgets/html-manager@{0:s}/dist/embed-amd.js".format(
+        version
+    )
+    if version.startswith("^"):
         version = version[1:]
     filename = "embed-amd_v{0:s}.js".format(version)
     filepath = os.path.join(target, filename)
@@ -91,7 +100,7 @@ def save_embed_js(target="", version=wembed.__html_manager_version__):
 
 
 # TODO this may be able to get directly taken from embed-amd.js in the future jupyter-widgets/ipywidgets#1650
-def save_font_awesome(dirpath='', version="4.7.0"):
+def save_font_awesome(dirpath="", version="4.7.0"):
     """Download and save the font-awesome package to a local directory.
 
     :type dirpath: str
@@ -111,7 +120,7 @@ def save_font_awesome(dirpath='', version="4.7.0"):
         top_level_name = unzip.namelist()[0]
         unzip.extractall(dirpath)
     except Exception as err:
-        raise IOError('Could not unzip content from: {0}\n{1}'.format(url, err))
+        raise IOError("Could not unzip content from: {0}\n{1}".format(url, err))
 
     os.rename(os.path.join(dirpath, top_level_name), directory_path)
 
@@ -122,10 +131,10 @@ def embed_html(
     filepath,
     widgets,
     makedirs=True,
-    title=u'IPyVolume Widget',
+    title=u"IPyVolume Widget",
     all_states=False,
     offline=False,
-    scripts_path='js',
+    scripts_path="js",
     drop_defaults=False,
     template=html_template,
     template_options=(("extra_script_head", ""), ("body_pre", ""), ("body_post", "")),
@@ -167,7 +176,9 @@ def embed_html(
     if not offline:
         # we have to get the snippet (rather than just call embed_minimal_html), because if the new template includes
         # {} characters (such as in the bokeh example) then an error is raised when trying to format
-        snippet = wembed.embed_snippet(widgets, state=state, requirejs=True, drop_defaults=drop_defaults)
+        snippet = wembed.embed_snippet(
+            widgets, state=state, requirejs=True, drop_defaults=drop_defaults
+        )
     else:
 
         if not os.path.isabs(scripts_path):
@@ -175,11 +186,13 @@ def embed_html(
         # ensure script path is above filepath
         rel_script_path = os.path.relpath(scripts_path, os.path.dirname(filepath))
         if rel_script_path.startswith(".."):
-            raise ValueError("The scripts_path must have the same root directory as the filepath")
-        elif rel_script_path == '.':
-            rel_script_path = ''
+            raise ValueError(
+                "The scripts_path must have the same root directory as the filepath"
+            )
+        elif rel_script_path == ".":
+            rel_script_path = ""
         else:
-            rel_script_path += '/'
+            rel_script_path += "/"
 
         fname_pyv = save_ipyvolumejs(scripts_path, devmode=devmode)
         fname_require = save_requirejs(os.path.join(scripts_path))
@@ -187,13 +200,17 @@ def embed_html(
         fname_fontawe = save_font_awesome(os.path.join(scripts_path))
 
         subsnippet = wembed.embed_snippet(
-            widgets, embed_url=rel_script_path + fname_embed, requirejs=False, drop_defaults=drop_defaults, state=state
+            widgets,
+            embed_url=rel_script_path + fname_embed,
+            requirejs=False,
+            drop_defaults=drop_defaults,
+            state=state,
         )
         if not offline_cors:
             # TODO DIRTY hack, we need to do this cleaner upstream
-            subsnippet = subsnippet.replace(' crossorigin="anonymous"', '')
+            subsnippet = subsnippet.replace(' crossorigin="anonymous"', "")
 
-        cors_attribute = 'crossorigin="anonymous"' if offline_cors else ' '
+        cors_attribute = 'crossorigin="anonymous"' if offline_cors else " "
         snippet = """
 <link href="{rel_script_path}{fname_fontawe}/css/font-awesome.min.css" rel="stylesheet">
 <script src="{rel_script_path}{fname_require}"{cors} data-main='./{rel_script_path}' ></script>
@@ -215,9 +232,9 @@ def embed_html(
             cors=cors_attribute,
         )
 
-    template_opts['snippet'] = snippet
-    template_opts['title'] = title
+    template_opts["snippet"] = snippet
+    template_opts["title"] = title
     html_code = template.format(**template_opts)
 
-    with io.open(filepath, "w", encoding='utf8') as f:
+    with io.open(filepath, "w", encoding="utf8") as f:
         f.write(html_code)
