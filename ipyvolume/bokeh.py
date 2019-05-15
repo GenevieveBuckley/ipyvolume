@@ -10,10 +10,10 @@ import ipyvolume
 semver_range_frontend = "~" + ipyvolume._version.__version_js__
 
 
-@widgets.register('ipyvolume.WidgetManagerHack')
+@widgets.register("ipyvolume.WidgetManagerHack")
 class WidgetManagerHackModel(widgets.Widget):
-    _model_name = Unicode('WidgetManagerHackModel').tag(sync=True)
-    _model_module = Unicode('ipyvolume').tag(sync=True)
+    _model_name = Unicode("WidgetManagerHackModel").tag(sync=True)
+    _model_module = Unicode("ipyvolume").tag(sync=True)
     _model_module_version = Unicode(semver_range_frontend).tag(sync=True)
 
 
