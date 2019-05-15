@@ -38,7 +38,9 @@ def test_serialize():
     assert ipyvolume.serialize.array_sequence_to_binary_or_json([]) == []
     empty_array = np.array([])
     assert ipyvolume.serialize.array_sequence_to_binary_or_json(empty_array) == []
-    assert type(ipyvolume.serialize.array_sequence_to_binary_or_json(empty_array)) == list
+    assert (
+        type(ipyvolume.serialize.array_sequence_to_binary_or_json(empty_array)) == list
+    )
 
     value = np.asarray(5)
     assert ipyvolume.serialize.array_sequence_to_binary_or_json(value) == 5
@@ -49,7 +51,9 @@ def test_serialize():
 
 def test_serialize_cube():
     cube = np.zeros((100, 200, 300))
-    tiles, _tile_shape, _rows, _columns, _slices = ipv.serialize._cube_to_tiles(cube, 0, 1)
+    tiles, _tile_shape, _rows, _columns, _slices = ipv.serialize._cube_to_tiles(
+        cube, 0, 1
+    )
     assert len(tiles.shape) == 3  # should be 2d + 1d for channels
     f = ipv.serialize.StringIO()
     ipv.serialize.cube_to_png(cube, 0, 1, f)
@@ -57,14 +61,18 @@ def test_serialize_cube():
 
 
 def test_tile_size():
-    rows, columns, image_width, image_height = ipyvolume.serialize._compute_tile_size((256, 256, 256))
+    rows, columns, image_width, image_height = ipyvolume.serialize._compute_tile_size(
+        (256, 256, 256)
+    )
     # expect 16x16,
     assert rows == 16
     assert columns == 16
     assert image_width == 256 * 16
     assert image_height == 256 * 16
 
-    rows, columns, image_width, image_height = ipyvolume.serialize._compute_tile_size((254, 254, 254))
+    rows, columns, image_width, image_height = ipyvolume.serialize._compute_tile_size(
+        (254, 254, 254)
+    )
     # expect the same, everything upscaled to a power of 2
     assert rows == 16
     assert columns == 16
@@ -72,21 +80,27 @@ def test_tile_size():
     assert image_height == 256 * 16
 
     ipyvolume.serialize.max_texture_width = 256 * 8
-    rows, columns, image_width, image_height = ipyvolume.serialize._compute_tile_size((254, 254, 254))
+    rows, columns, image_width, image_height = ipyvolume.serialize._compute_tile_size(
+        (254, 254, 254)
+    )
     assert rows == 32
     assert columns == 8
     assert image_width == 256 * 8
     assert image_height == 256 * 32
 
     ipyvolume.serialize.min_texture_width = 16 * 8
-    rows, columns, image_width, image_height = ipyvolume.serialize._compute_tile_size((16, 16, 16))
+    rows, columns, image_width, image_height = ipyvolume.serialize._compute_tile_size(
+        (16, 16, 16)
+    )
     assert rows == 2
     assert columns == 8
     assert image_width == 128
     assert image_height == 128  # this is the min texture size
 
     ipyvolume.serialize.min_texture_width = 16 * 8
-    rows, columns, image_width, image_height = ipyvolume.serialize._compute_tile_size((15, 15, 15))
+    rows, columns, image_width, image_height = ipyvolume.serialize._compute_tile_size(
+        (15, 15, 15)
+    )
     assert rows == 2
     assert columns == 8
     assert image_width == 128
@@ -109,14 +123,14 @@ def test_figure():
     assert f4 == f5
     assert f5 != f6
 
-    f7 = p3.figure('f7')
+    f7 = p3.figure("f7")
     f8 = p3.figure()
-    f9 = p3.figure('f7')
+    f9 = p3.figure("f7")
     f10 = p3.figure(f8)
     f11 = p3.gcf()
     f12 = p3.current.figure
-    f13 = p3.figure('f7')
-    f14 = p3.current.figures['f7']
+    f13 = p3.figure("f7")
+    f14 = p3.current.figures["f7"]
 
     assert f7 == f9
     assert f8 == f10
@@ -230,30 +244,30 @@ def test_limits():
 
 def test_style():
     f = ipv.figure()
-    ipv.style.use('nobox')
-    assert f.style['box']['visible'] is False
-    ipv.style.use(['nobox', {'box': {'visible': True}}])
-    assert f.style['box']['visible'] is True
-    ipv.style.use({'box': {'visible': False}})
-    assert f.style['box']['visible'] is False
-    ipv.style.use({'axes': {'visible': False}})
-    assert f.style['axes']['visible'] is False
+    ipv.style.use("nobox")
+    assert f.style["box"]["visible"] is False
+    ipv.style.use(["nobox", {"box": {"visible": True}}])
+    assert f.style["box"]["visible"] is True
+    ipv.style.use({"box": {"visible": False}})
+    assert f.style["box"]["visible"] is False
+    ipv.style.use({"axes": {"visible": False}})
+    assert f.style["axes"]["visible"] is False
 
     ipv.style.axes_off()
-    assert f.style['axes']['visible'] is False
+    assert f.style["axes"]["visible"] is False
     ipv.style.axes_on()
-    assert f.style['axes']['visible'] is True
+    assert f.style["axes"]["visible"] is True
 
     ipv.style.box_off()
-    assert f.style['box']['visible'] is False
+    assert f.style["box"]["visible"] is False
     ipv.style.box_on()
-    assert f.style['box']['visible'] is True
+    assert f.style["box"]["visible"] is True
 
     ipv.style.set_style_light()  # pylint: disable=no-member
-    assert f.style['background-color'] == 'white'
+    assert f.style["background-color"] == "white"
     ipv.style.box_off()
-    assert f.style['box']['visible'] is False
-    assert f.style['background-color'] == 'white'  # keep old style settings
+    assert f.style["box"]["visible"] is False
+    assert f.style["background-color"] == "white"  # keep old style settings
 
 
 def test_labels():
@@ -324,7 +338,9 @@ def test_bokeh():
     tools = "wheel_zoom,box_zoom,box_select,lasso_select,help,reset,"
     p = figure(title="E Lz space", tools=tools, width=500, height=500)
     r = p.circle(x, y, color="navy", alpha=0.2)
-    ipyvolume.bokeh.link_data_source_selection_to_widget(r.data_source, scatter, 'selected')
+    ipyvolume.bokeh.link_data_source_selection_to_widget(
+        r.data_source, scatter, "selected"
+    )
 
     from bokeh.resources import CDN
     from bokeh.embed import components
@@ -332,10 +348,15 @@ def test_bokeh():
     script, div = components(p)
     template_options = dict(
         extra_script_head=script + CDN.render_js() + CDN.render_css(),
-        body_pre="<h2>Do selections in 2d (bokeh)<h2>" + div + "<h2>And see the selection in ipyvolume<h2>",
+        body_pre="<h2>Do selections in 2d (bokeh)<h2>"
+        + div
+        + "<h2>And see the selection in ipyvolume<h2>",
     )
     ipyvolume.embed.embed_html(
-        "tmp/bokeh.html", [p3.gcc(), ipyvolume.bokeh.wmh], all_states=True, template_options=template_options
+        "tmp/bokeh.html",
+        [p3.gcc(), ipyvolume.bokeh.wmh],
+        all_states=True,
+        template_options=template_options,
     )
 
 
@@ -363,7 +384,7 @@ def test_download():
     assert len(content) == filesize
     byte_list = list(ipyvolume.utils.download_yield_bytes(url, chunk_size=1000))
     # write the first chunk of the url to file then attempt to resume the download
-    with open("tmp/test_download3.npy.bz2", 'wb') as f:
+    with open("tmp/test_download3.npy.bz2", "wb") as f:
         f.write(byte_list[0])
     ipyvolume.utils.download_to_file(url, "tmp/test_download3.npy.bz2", resume=True)
 
@@ -374,20 +395,27 @@ def test_embed():
     p3.scatter(x, y, z)
     p3.save("tmp/ipyolume_scatter_online.html", offline=False, devmode=True)
     assert os.path.getsize("tmp/ipyolume_scatter_online.html") > 0
-    p3.save("tmp/ipyolume_scatter_offline.html", offline=True, scripts_path='js/subdir', devmode=True)
+    p3.save(
+        "tmp/ipyolume_scatter_offline.html",
+        offline=True,
+        scripts_path="js/subdir",
+        devmode=True,
+    )
     assert os.path.getsize("tmp/ipyolume_scatter_offline.html") > 0
 
 
 def test_threejs_version():
     # a quick check, as a reminder to change if threejs version is updated
-    configpath = os.path.join(os.path.abspath(ipyvolume.__path__[0]), "..", "js", "package.json")
+    configpath = os.path.join(
+        os.path.abspath(ipyvolume.__path__[0]), "..", "js", "package.json"
+    )
     with open(configpath) as f:
         config = json.load(f)
     major, minor = ipyvolume._version.__version_threejs__.split(".")
-    major_js, minor_js, _patch_js = config['dependencies']['three'][1:].split(".")
+    major_js, minor_js, _patch_js = config["dependencies"]["three"][1:].split(".")
     version_msg = "version in python and js side for three js conflect: %s vs %s" % (
         ipyvolume._version.__version_threejs__,
-        config['dependencies']['three'],
+        config["dependencies"]["three"],
     )
     assert (major == major_js) and (minor == minor_js), version_msg
 
