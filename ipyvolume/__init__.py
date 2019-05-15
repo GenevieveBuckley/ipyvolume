@@ -11,9 +11,11 @@ from ipyvolume.pylab import *  # noqa: F401, F403
 
 
 def _jupyter_nbextension_paths():
-    return [{
-        'section': 'notebook',
-        'src': 'static',
-        'dest': 'ipyvolume',
-        'require': 'ipyvolume/extension'
-    }]
+    return [
+        {
+            "section": "notebook",
+            "src": "static",
+            "dest": "ipyvolume",
+            "require": "ipyvolume/extension",
+        }
+    ]
