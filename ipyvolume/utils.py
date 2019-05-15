@@ -56,11 +56,14 @@ def download_to_bytes(url, chunk_size=1024 * 1024 * 10, loadbar_length=10):
     response.raise_for_status()
 
     encoding = response.encoding
-    total_length = response.headers.get('content-length')
+    total_length = response.headers.get("content-length")
     if total_length is not None:
         total_length = float(total_length)
         if stream:
-            print("{0:.2f}Mb/{1:} ".format(total_length / (1024 * 1024), loadbar_length), end="")
+            print(
+                "{0:.2f}Mb/{1:} ".format(total_length / (1024 * 1024), loadbar_length),
+                end="",
+            )
         else:
             print("{0:.2f}Mb ".format(total_length / (1024 * 1024)), end="")
 
@@ -74,15 +77,15 @@ def download_to_bytes(url, chunk_size=1024 * 1024 * 10, loadbar_length=10):
                 # print our progress bar
                 if total_length is not None:
                     while loaded < loadbar_length * loaded_size / total_length:
-                        print("=", end='')
+                        print("=", end="")
                         loaded += 1
                     loaded_size += chunk_size
                 chunks.append(chunk)
         if total_length is None:
-            print("=" * loadbar_length, end='')
+            print("=" * loadbar_length, end="")
         else:
             while loaded < loadbar_length:
-                print("=", end='')
+                print("=", end="")
                 loaded += 1
         content = b"".join(chunks)
         print("] ", end="")
@@ -106,7 +109,7 @@ def download_yield_bytes(url, chunk_size=1024 * 1024 * 10):
     # raise error if download was unsuccessful
     response.raise_for_status()
 
-    total_length = response.headers.get('content-length')
+    total_length = response.headers.get("content-length")
     if total_length is not None:
         total_length = float(total_length)
         length_str = "{0:.2f}Mb ".format(total_length / (1024 * 1024))
@@ -119,7 +122,14 @@ def download_yield_bytes(url, chunk_size=1024 * 1024 * 10):
     response.close()
 
 
-def download_to_file(url, filepath, resume=False, overwrite=False, chunk_size=1024 * 1024 * 10, loadbar_length=10):
+def download_to_file(
+    url,
+    filepath,
+    resume=False,
+    overwrite=False,
+    chunk_size=1024 * 1024 * 10,
+    loadbar_length=10,
+):
     """Download a url.
 
     prints a simple loading bar [=*loadbar_length] to show progress (in console and notebook)
@@ -135,7 +145,7 @@ def download_to_file(url, filepath, resume=False, overwrite=False, chunk_size=10
     """
     resume_header = None
     loaded_size = 0
-    write_mode = 'wb'
+    write_mode = "wb"
 
     if os.path.exists(filepath):
         if overwrite:
@@ -143,13 +153,13 @@ def download_to_file(url, filepath, resume=False, overwrite=False, chunk_size=10
         elif resume:
             # if we want to resume, first try and see if the file is already complete
             loaded_size = os.path.getsize(filepath)
-            clength = requests.head(url).headers.get('content-length')
+            clength = requests.head(url).headers.get("content-length")
             if clength is not None:
                 if int(clength) == loaded_size:
                     return None
             # give the point to resume at
-            resume_header = {'Range': 'bytes=%s-' % loaded_size}
-            write_mode = 'ab'
+            resume_header = {"Range": "bytes=%s-" % loaded_size}
+            write_mode = "ab"
         else:
             return None
 
@@ -163,10 +173,13 @@ def download_to_file(url, filepath, resume=False, overwrite=False, chunk_size=10
     response.raise_for_status()
 
     # get the size of the file if available
-    total_length = response.headers.get('content-length')
+    total_length = response.headers.get("content-length")
     if total_length is not None:
         total_length = float(total_length) + loaded_size
-        print("{0:.2f}Mb/{1:} ".format(total_length / (1024 * 1024), loadbar_length), end="")
+        print(
+            "{0:.2f}Mb/{1:} ".format(total_length / (1024 * 1024), loadbar_length),
+            end="",
+        )
     print("[", end="")
 
     parent = os.path.dirname(filepath)
@@ -180,15 +193,15 @@ def download_to_file(url, filepath, resume=False, overwrite=False, chunk_size=10
                 # print our progress bar
                 if total_length is not None and chunk_size is not None:
                     while loaded < loadbar_length * loaded_size / total_length:
-                        print("=", end='')
+                        print("=", end="")
                         loaded += 1
                     loaded_size += chunk_size
                 f.write(chunk)
         if total_length is None:
-            print("=" * loadbar_length, end='')
+            print("=" * loadbar_length, end="")
         else:
             while loaded < loadbar_length:
-                print("=", end='')
+                print("=", end="")
                 loaded += 1
     print("] Finished")
 
@@ -260,7 +273,7 @@ def grid_slice(amin, amax, shape, bmin, bmax):
 
 def get_ioloop():
     ipython = IPython.get_ipython()
-    if ipython and hasattr(ipython, 'kernel'):
+    if ipython and hasattr(ipython, "kernel"):
         return zmq.eventloop.ioloop.IOLoop.instance()
 
 
@@ -277,7 +290,9 @@ def debounced(delay_seconds=0.5, method=False):
             counters[key] += 1
 
             def debounced_execute(counter=counters[key]):
-                if counter == counters[key]:  # only execute if the counter wasn't changed in the meantime
+                if (
+                    counter == counters[key]
+                ):  # only execute if the counter wasn't changed in the meantime
                     f(*args, **kwargs)
 
             ioloop = get_ioloop()
@@ -285,7 +300,9 @@ def debounced(delay_seconds=0.5, method=False):
             def thread_safe():
                 ioloop.add_timeout(time.time() + delay_seconds, debounced_execute)
 
-            if ioloop is None:  # we live outside of IPython (e.g. unittest), so execute directly
+            if (
+                ioloop is None
+            ):  # we live outside of IPython (e.g. unittest), so execute directly
                 debounced_execute()
             else:
                 ioloop.add_callback(thread_safe)
