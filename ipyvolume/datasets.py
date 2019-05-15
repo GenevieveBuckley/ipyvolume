@@ -26,10 +26,18 @@ class UrlCached(object):
             print("Downloading %s to %s" % (self.url, self.path))
             code = os.system(self.download_command_wget())
             if not os.path.exists(self.path):
-                print("Download failed, exit code was: " + str(code) + " will try with curl")
+                print(
+                    "Download failed, exit code was: "
+                    + str(code)
+                    + " will try with curl"
+                )
                 code = os.system(self.download_command_curl())
                 if not os.path.exists(self.path):
-                    print("Download failed again, exit code was: " + str(code) + " using urlretrieve")
+                    print(
+                        "Download failed again, exit code was: "
+                        + str(code)
+                        + " using urlretrieve"
+                    )
                     self.download_urlretrieve()
 
     def fetch(self):
@@ -50,7 +58,9 @@ class UrlCached(object):
 
 
 class Dataset(object):
-    def __init__(self, name, density=True, numpy=False, raw=False, shape=None, dtype=None):
+    def __init__(
+        self, name, density=True, numpy=False, raw=False, shape=None, dtype=None
+    ):
         self.name = name
         self.density = density
         self.numpy = numpy
@@ -59,17 +69,29 @@ class Dataset(object):
         self.dtype = dtype
         if density:
             if raw:
-                self.url = "https://github.com/maartenbreddels/ipyvolume/raw/master/datasets/%s.raw.bz2" % name
+                self.url = (
+                    "https://github.com/maartenbreddels/ipyvolume/raw/master/datasets/%s.raw.bz2"
+                    % name
+                )
                 self.path = os.path.join(data_dir, name + ".raw.bz2")
             else:
-                self.url = "https://github.com/maartenbreddels/ipyvolume/raw/master/datasets/%s.npy.bz2" % name
+                self.url = (
+                    "https://github.com/maartenbreddels/ipyvolume/raw/master/datasets/%s.npy.bz2"
+                    % name
+                )
                 self.path = os.path.join(data_dir, name + ".npy.bz2")
         else:
             if numpy:
-                self.url = "https://github.com/maartenbreddels/ipyvolume/raw/master/datasets/%s.npy.bz2" % name
+                self.url = (
+                    "https://github.com/maartenbreddels/ipyvolume/raw/master/datasets/%s.npy.bz2"
+                    % name
+                )
                 self.path = os.path.join(data_dir, name + ".npy.bz2")
             else:
-                self.url = "https://github.com/maartenbreddels/ipyvolume/raw/master/datasets/%s.csv.gz" % name
+                self.url = (
+                    "https://github.com/maartenbreddels/ipyvolume/raw/master/datasets/%s.csv.gz"
+                    % name
+                )
                 self.path = os.path.join(data_dir, name + ".csv.gz")
 
     def download(self, force=False):
@@ -77,10 +99,18 @@ class Dataset(object):
             print("Downloading %s to %s" % (self.url, self.path))
             code = os.system(self.download_command_wget())
             if not os.path.exists(self.path):
-                print("Download failed, exit code was: " + str(code) + " will try with curl")
+                print(
+                    "Download failed, exit code was: "
+                    + str(code)
+                    + " will try with curl"
+                )
                 code = os.system(self.download_command_curl())
                 if not os.path.exists(self.path):
-                    print("Download failed again, exit code was: " + str(code) + " using urlretrieve")
+                    print(
+                        "Download failed again, exit code was: "
+                        + str(code)
+                        + " using urlretrieve"
+                    )
                     self.download_urlretrieve()
 
     def fetch(self):
@@ -89,7 +119,9 @@ class Dataset(object):
             if self.density:
                 with bz2.BZ2File(self.path) as f:
                     if self.raw:
-                        self.data = np.fromstring(f.read(), self.dtype).reshape(self.shape)
+                        self.data = np.fromstring(f.read(), self.dtype).reshape(
+                            self.shape
+                        )
                     else:
                         self.data = np.load(f)
             else:
@@ -121,6 +153,6 @@ aquariusA2 = Dataset("aquarius-A2")
 egpbosLCDM = Dataset("egpbos-LCDM")
 zeldovich = Dataset("zeldovich", density=False)
 animated_stream = Dataset("stream-animation", density=False, numpy=True)
-head = Dataset('male', raw=True, shape=(256, 256, 128), dtype=np.uint8)
+head = Dataset("male", raw=True, shape=(256, 256, 128), dtype=np.uint8)
 
 # low poly cat from: https://sketchfab.com/models/1e7143dfafd04ff4891efcb06949a0b4#
