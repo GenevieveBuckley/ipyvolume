@@ -16,7 +16,7 @@ import logging
 import warnings
 
 import numpy as np
-import ipywidgets as widgets  # we should not have widgets under two names
+import ipywidgets
 import ipywebrtc
 import pythreejs
 import traitlets
@@ -43,8 +43,8 @@ logger = logging.getLogger("ipyvolume")
 semver_range_frontend = "~" + ipyvolume._version.__version_js__
 
 
-@widgets.register
-class Mesh(widgets.Widget):
+@ipywidgets.register
+class Mesh(ipywidgets.Widget):
     _view_name = Unicode("MeshView").tag(sync=True)
     _view_module = Unicode("ipyvolume").tag(sync=True)
     _model_name = Unicode("MeshModel").tag(sync=True)
@@ -85,7 +85,7 @@ class Mesh(widgets.Widget):
     material = traitlets.Instance(
         pythreejs.ShaderMaterial,
         help="A :any:`pythreejs.ShaderMaterial` that is used for the mesh",
-    ).tag(sync=True, **widgets.widget_serialization)
+    ).tag(sync=True, **ipywidgets.widget_serialization)
 
     @traitlets.default("material")
     def _default_material(self):
@@ -94,15 +94,15 @@ class Mesh(widgets.Widget):
     line_material = traitlets.Instance(
         pythreejs.ShaderMaterial,
         help="A :any:`pythreejs.ShaderMaterial` that is used for the lines/wireframe",
-    ).tag(sync=True, **widgets.widget_serialization)
+    ).tag(sync=True, **ipywidgets.widget_serialization)
 
     @traitlets.default("line_material")
     def _default_line_material(self):
         return pythreejs.ShaderMaterial()
 
 
-@widgets.register
-class Scatter(widgets.Widget):
+@ipywidgets.register
+class Scatter(ipywidgets.Widget):
     _view_name = Unicode("ScatterView").tag(sync=True)
     _view_module = Unicode("ipyvolume").tag(sync=True)
     _model_name = Unicode("ScatterModel").tag(sync=True)
@@ -172,7 +172,7 @@ class Scatter(widgets.Widget):
     material = traitlets.Instance(
         pythreejs.ShaderMaterial,
         help="A :any:`pythreejs.ShaderMaterial` that is used for the mesh",
-    ).tag(sync=True, **widgets.widget_serialization)
+    ).tag(sync=True, **ipywidgets.widget_serialization)
 
     @traitlets.default("material")
     def _default_material(self):
@@ -181,15 +181,15 @@ class Scatter(widgets.Widget):
     line_material = traitlets.Instance(
         pythreejs.ShaderMaterial,
         help="A :any:`pythreejs.ShaderMaterial` that is used for the lines/wireframe",
-    ).tag(sync=True, **widgets.widget_serialization)
+    ).tag(sync=True, **ipywidgets.widget_serialization)
 
     @traitlets.default("line_material")
     def _default_line_material(self):
         return pythreejs.ShaderMaterial()
 
 
-@widgets.register
-class Volume(widgets.Widget):
+@ipywidgets.register
+class Volume(ipywidgets.Widget):
     """Widget class representing a volume (rendering) using three.js."""
 
     _view_name = Unicode("VolumeView").tag(sync=True)
@@ -215,7 +215,7 @@ class Volume(widgets.Widget):
     opacity_scale = traitlets.CFloat(1.0).tag(sync=True)
     brightness = traitlets.CFloat(1.0).tag(sync=True)
     tf = traitlets.Instance(TransferFunction, allow_none=True).tag(
-        sync=True, **widgets.widget_serialization
+        sync=True, **ipywidgets.widget_serialization
     )
     ray_steps = traitlets.CInt(
         None,
@@ -267,7 +267,7 @@ class Volume(widgets.Widget):
         self.extent = extent
 
 
-@widgets.register
+@ipywidgets.register
 class Figure(ipywebrtc.MediaStream):
     """Widget class representing a volume (rendering) using three.js."""
 
@@ -281,13 +281,13 @@ class Figure(ipywebrtc.MediaStream):
     eye_separation = traitlets.CFloat(6.4).tag(sync=True)
 
     scatters = traitlets.List(traitlets.Instance(Scatter), [], allow_none=False).tag(
-        sync=True, **widgets.widget_serialization
+        sync=True, **ipywidgets.widget_serialization
     )
     meshes = traitlets.List(traitlets.Instance(Mesh), [], allow_none=False).tag(
-        sync=True, **widgets.widget_serialization
+        sync=True, **ipywidgets.widget_serialization
     )
     volumes = traitlets.List(traitlets.Instance(Volume), [], allow_none=False).tag(
-        sync=True, **widgets.widget_serialization
+        sync=True, **ipywidgets.widget_serialization
     )
 
     animation = traitlets.Float(1000.0).tag(sync=True)
@@ -311,7 +311,7 @@ class Figure(ipywebrtc.MediaStream):
         pythreejs.Camera,
         allow_none=True,
         help="A :any:`pythreejs.Camera` instance to control the camera",
-    ).tag(sync=True, **widgets.widget_serialization)
+    ).tag(sync=True, **ipywidgets.widget_serialization)
 
     @traitlets.default("camera")
     def _default_camera(self):
@@ -326,7 +326,7 @@ class Figure(ipywebrtc.MediaStream):
         )
 
     scene = traitlets.Instance(pythreejs.Scene, allow_none=True).tag(
-        sync=True, **widgets.widget_serialization
+        sync=True, **ipywidgets.widget_serialization
     )
 
     @traitlets.default("scene")
@@ -394,8 +394,8 @@ class Figure(ipywebrtc.MediaStream):
 
     def __init__(self, **kwargs):
         super(Figure, self).__init__(**kwargs)
-        self._screenshot_handlers = widgets.CallbackDispatcher()
-        self._selection_handlers = widgets.CallbackDispatcher()
+        self._screenshot_handlers = ipywidgets.CallbackDispatcher()
+        self._selection_handlers = ipywidgets.CallbackDispatcher()
         self.on_msg(self._handle_custom_msg)
 
     def __enter__(self):
