@@ -2,7 +2,7 @@ import os
 import json
 
 import numpy as np
-import ipywidgets as widgets
+import ipywidgets
 import pythreejs
 import ipywebrtc
 from IPython.display import display
@@ -26,34 +26,34 @@ class MovieMaker(object):
         self.filename_camera = filename_camera
         self.filename_movie = filename_movie
         self.overwrite_video = overwrite_video
-        self.button_record = widgets.ToggleButton(
+        self.button_record = ipywidgets.ToggleButton(
             description="Record", icon="circle", value=False
         )  # , style={'font-color': 'red'})
-        widgets.jslink((self.button_record, "value"), (self.recorder, "recording"))
+        ipywidgets.jslink((self.button_record, "value"), (self.recorder, "recording"))
         self.recorder.video.observe(lambda *x: self.write_movie(), "value")
-        self.button_add = widgets.Button(description="Add")
+        self.button_add = ipywidgets.Button(description="Add")
         self.button_add.on_click(lambda *x: self.add())
-        self.button_replace = widgets.Button(description="Replace")
+        self.button_replace = ipywidgets.Button(description="Replace")
         self.button_replace.on_click(lambda *x: self.replace())
-        self.button_remove = widgets.Button(description="Remove")
+        self.button_remove = ipywidgets.Button(description="Remove")
         self.button_remove.on_click(lambda *x: self.remove())
-        self.button_save = widgets.Button(description="Save")
+        self.button_save = ipywidgets.Button(description="Save")
         self.button_save.on_click(lambda *x: self.save())
-        self.button_load = widgets.Button(description="Load")
+        self.button_load = ipywidgets.Button(description="Load")
         self.button_load.on_click(lambda *x: self.load())
-        self.select_keyframes = widgets.Select(description="Keyframes")
+        self.select_keyframes = ipywidgets.Select(description="Keyframes")
         self.positions = []
         self.quaternions = []
         self.times = []
-        self.camera_action_box = widgets.HBox()
-        self.output = widgets.Output()
+        self.camera_action_box = ipywidgets.HBox()
+        self.output = ipywidgets.Output()
 
         self.options_interpolation = [
             ("discrete", "InterpolateDiscrete"),
             ("linear", "InterpolateLinear"),
             ("smooth", "InterpolateSmooth"),
         ]
-        self.select_interpolation = widgets.Dropdown(
+        self.select_interpolation = ipywidgets.Dropdown(
             options=self.options_interpolation, index=1
         )
 
@@ -68,11 +68,11 @@ class MovieMaker(object):
             self.times = times
             self.update_keyframes()
 
-        box_io = widgets.HBox([self.button_save, self.button_load])
-        box_control = widgets.HBox(
+        box_io = ipywidgets.HBox([self.button_save, self.button_load])
+        box_control = ipywidgets.HBox(
             [self.button_add, self.button_replace, self.button_remove]
         )
-        self.widget_main = widgets.VBox(
+        self.widget_main = ipywidgets.VBox(
             [
                 self.button_record,
                 self.select_interpolation,
@@ -209,12 +209,12 @@ class MovieMaker(object):
     #         self.rotation_track.valeus = self.quaternions
 
     def show(self):
-        box_io = widgets.HBox([self.button_save, self.button_load])
-        box_control = widgets.HBox(
+        box_io = ipywidgets.HBox([self.button_save, self.button_load])
+        box_control = ipywidgets.HBox(
             [self.button_add, self.button_replace, self.button_remove]
         )
         display(
-            widgets.VBox(
+            ipywidgets.VBox(
                 [
                     self.button_record,
                     self.select_interpolation,
