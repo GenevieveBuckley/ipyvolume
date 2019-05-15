@@ -348,9 +348,8 @@ def test_bokeh():
     script, div = components(p)
     template_options = dict(
         extra_script_head=script + CDN.render_js() + CDN.render_css(),
-        body_pre="<h2>Do selections in 2d (bokeh)<h2>"
-        + div
-        + "<h2>And see the selection in ipyvolume<h2>",
+        body_pre="<h2>Do selections in 2d (bokeh)<h2>" + div
+                 + "<h2>And see the selection in ipyvolume<h2>",
     )
     ipyvolume.embed.embed_html(
         "tmp/bokeh.html",

@@ -27,16 +27,14 @@ class UrlCached(object):
             code = os.system(self.download_command_wget())
             if not os.path.exists(self.path):
                 print(
-                    "Download failed, exit code was: "
-                    + str(code)
+                    "Download failed, exit code was: {}".format(str(code))
                     + " will try with curl"
                 )
                 code = os.system(self.download_command_curl())
                 if not os.path.exists(self.path):
                     print(
                         "Download failed again, exit code was: "
-                        + str(code)
-                        + " using urlretrieve"
+                        "{} using urlretrieve".format(str(code))
                     )
                     self.download_urlretrieve()
 
@@ -100,16 +98,14 @@ class Dataset(object):
             code = os.system(self.download_command_wget())
             if not os.path.exists(self.path):
                 print(
-                    "Download failed, exit code was: "
-                    + str(code)
+                    "Download failed, exit code was: {}".format(str(code))
                     + " will try with curl"
                 )
                 code = os.system(self.download_command_curl())
                 if not os.path.exists(self.path):
                     print(
                         "Download failed again, exit code was: "
-                        + str(code)
-                        + " using urlretrieve"
+                        "{} using urlretrieve".format(str(code))
                     )
                     self.download_urlretrieve()
 
