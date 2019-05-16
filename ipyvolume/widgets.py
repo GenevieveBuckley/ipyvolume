@@ -13,7 +13,6 @@ __all__ = [
 ]
 
 import logging
-import warnings
 
 import numpy as np
 import ipywidgets
