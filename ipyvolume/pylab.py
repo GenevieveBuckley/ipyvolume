@@ -1358,7 +1358,7 @@ class style:
                             value = float(value) * 255
                             value = "rgb(%d, %d, %d)" % (value, value, value)
                         except Exception as e:
-                            print("Error '{}' occured. ".format(e.message)) +
+                            print("Error '{}' occured. ".format(e.message) +
                                   "Arguments {}.".format(e.args))
 
                     utils.nested_setitem(style, to_name, value)
