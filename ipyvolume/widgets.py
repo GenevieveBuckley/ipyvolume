@@ -514,16 +514,6 @@ def quickvolshow(
     return ipv.gcc()
 
 
-def scatter(x, y, z, color=(1, 0, 0), s=0.01):
-    global _last_figure
-    fig = _last_figure
-    if fig is None:
-        fig = volshow(None)
-    fig.scatter = Scatter(x=x, y=y, z=z, color=color, size=s)
-    fig.volume.scatter = fig.scatter
-    return fig
-
-
 # add all help strings to the __doc__ for the api docstrings
 for name, cls in list(vars().items()):
     try:
