@@ -36,6 +36,7 @@ before_install:
 
 install:
   - pip install -e .
+  - conda list
 
 script:
   - py.test --cov-report= --cov=ipyvolume ipyvolume
