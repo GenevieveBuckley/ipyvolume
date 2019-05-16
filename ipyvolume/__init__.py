@@ -1,10 +1,10 @@
 from __future__ import absolute_import
 
-from ipyvolume._version import __version__  # noqa: F401
-from ipyvolume import styles  # noqa: F401
-from ipyvolume import examples  # noqa: F401
-from ipyvolume import datasets  # noqa: F401
-from ipyvolume import embed  # noqa: F401
+from ipyvolume._version import __version__
+from ipyvolume import styles
+from ipyvolume import examples
+from ipyvolume import datasets
+from ipyvolume import embed
 from ipyvolume.widgets import (Mesh,
                                Scatter,
                                Volume,
@@ -12,12 +12,12 @@ from ipyvolume.widgets import (Mesh,
                                quickquiver,
                                quickscatter,
                                quickvolshow,
-                               )  # noqa: F401
+                               )
 from ipyvolume.transferfunction import (TransferFunction,
                                         TransferFunctionJsBumps,
                                         TransferFunctionWidgetJs3,
                                         TransferFunctionWidget3,
-                                        )  # noqa: F401
+                                        )
 from ipyvolume.pylab import (current,
                              clear,
                              controls_light,
@@ -54,7 +54,7 @@ from ipyvolume.pylab import (current,
                              style,
                              plot_plane,
                              selector_default,
-                             )  # noqa: F401
+                             )
 
 
 def _jupyter_nbextension_paths():
