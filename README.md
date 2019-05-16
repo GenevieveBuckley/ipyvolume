@@ -39,17 +39,59 @@ Documentation is generated at readthedocs: [![Documentation](https://readthedocs
 
 ## Animation
 
+```
+import ipyvolume as ipv
+animated_stream = ipv.datasets.animated_stream.fetch()
+fig = ipv.figure()
+ipv.pylab.style.use('dark')
+s = ipv.quiver(*animated_stream.data, size=6)
+ipv.animation_control(s, interval=200)
+ipv.show()
+```
+
 ![screencast](https://cloud.githubusercontent.com/assets/1765949/23901444/8d4f26f8-08bd-11e7-81e6-cedad0a8471c.gif)
 
 (see more at [the documentation](https://ipyvolume.readthedocs.io/en/latest/animation.html))
 
 ## Volume rendering
 
+```
+import ipyvolume as ipv
+hdz = ipv.datasets.hdz2000.fetch()
+ipv.quickvolshow(hdz.data, lighting=True, level=[0.4, 0.6, 0.9])
+```
+
 ![screencast](https://raw.githubusercontent.com/maartenbreddels/ipyvolume/master/misc/screencast.gif)
 
 ## Glyphs (quiver plots)
 
+```
+import ipyvolume as ipv
+import numpy as np
+hdz = ipv.datasets.hdz2000.fetch()
+fig = ipv.figure(controls=False)
+ipv.volshow(hdz.data.T, level=[0.6, 0.8, 0.9],
+            opacity=[0.01, 0.03 ,0.05], controls=False)
+x, y, z, u, v, w = np.random.random((6, 1000)) * 2 - 1
+quiver = ipv.quiver(x, y, z, u, v, w, s=0.05, ss=0.1)
+ipv.show()
+```
+
 ![screencast quiver](https://raw.githubusercontent.com/maartenbreddels/ipyvolume/master/misc/screencast_quiver.gif)
+
+```
+quiver.selected = np.random.randint(0, 1000, 100)
+```
+
+```
+quiver.x = np.random.random((1000)) * 2 - 1
+quiver.vz = np.random.random((1000)) * 2 - 1
+```
+
+```
+quiver.color = "green"
+quiver.color_selected = "orange"
+```
 
 # Installation
 
