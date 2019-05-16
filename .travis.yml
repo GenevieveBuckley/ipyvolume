@@ -43,7 +43,7 @@ script:
   - flake8 ipyvolume
   - (cd js; ./node_modules/.bin/eslint src/selectors.js)
   - (cd js; npm run test)
-  - runipy notebooks/examples.ipynb
+  - runipy notebooks/example.ipynb
 
 after_success:
   coveralls
