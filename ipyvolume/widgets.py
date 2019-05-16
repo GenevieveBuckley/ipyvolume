@@ -445,16 +445,6 @@ class Figure(ipywebrtc.MediaStream):
         return xy
 
 
-def volshow(*args, **kwargs):
-    """Deprecated: please use ipyvolume.quickvolshow or use the ipyvolume.pylab interface."""
-    warnings.warn(
-        "Please use ipyvolume.quickvolshow or use the ipyvolume.pylab interface",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    return quickvolshow(*args, **kwargs)
-
-
 def quickquiver(x, y, z, u, v, w, **kwargs):
     ipv.figure()
     ipv.quiver(x, y, z, u, v, w, **kwargs)
