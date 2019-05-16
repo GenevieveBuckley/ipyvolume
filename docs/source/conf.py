@@ -40,7 +40,7 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'jupyter_sphinx.embed_widgets',
-	'nbsphinx',
+    'nbsphinx',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -146,11 +146,11 @@ todo_include_todos = True
 
 
 try:
-	import sphinx_rtd_theme
-	html_theme = "sphinx_rtd_theme"
-	html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-except:
-	print "rtd theme not found"
+    import sphinx_rtd_theme
+    html_theme = "sphinx_rtd_theme"
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+except Exception:
+    print "rtd theme not found"
 
 
 # Theme options are theme-specific and customize the look and feel of a theme
@@ -271,21 +271,21 @@ htmlhelp_basename = 'ipyvolumedoc'
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
-     # The paper size ('letterpaper' or 'a4paper').
-     #
-     # 'papersize': 'letterpaper',
+    # The paper size ('letterpaper' or 'a4paper').
+    #
+    # 'papersize': 'letterpaper',
 
-     # The font size ('10pt', '11pt' or '12pt').
-     #
-     # 'pointsize': '10pt',
+    # The font size ('10pt', '11pt' or '12pt').
+    #
+    # 'pointsize': '10pt',
 
-     # Additional stuff for the LaTeX preamble.
-     #
-     # 'preamble': '',
+    # Additional stuff for the LaTeX preamble.
+    #
+    # 'preamble': '',
 
-     # Latex figure (float) alignment
-     #
-     # 'figure_align': 'htbp',
+    # Latex figure (float) alignment
+    #
+    # 'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples

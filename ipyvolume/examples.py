@@ -14,8 +14,10 @@ from numpy import cos, sin, pi
 try:
     import scipy.ndimage
     import scipy.special
-except:
+except Exception as e:
+    print("Error '{0}' occured. Arguments {1}.".format(e.message, e.args))
     pass  # it's ok, it's not crucial
+
 # __all__ = ["example_ylm"]
 
 
@@ -23,11 +25,11 @@ def xyz(shape=128, limits=[-3, 3], spherical=False, sparse=True, centers=False):
     dim = 3
     try:
         shape[0]
-    except:
+    except TypeError:
         shape = [shape] * dim
     try:
         limits[0][0]  # pylint: disable=unsubscriptable-object
-    except:
+    except TypeError:
         limits = [limits] * dim
     if centers:
         v = [
@@ -201,7 +203,7 @@ def brain(
 
     try:
         import cortex
-    except:
+    except ImportError:
         warnings.warn(
             "it seems pycortex is not installed, which is needed for this example"
         )

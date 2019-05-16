@@ -51,7 +51,7 @@ import base64
 
 try:
     from io import BytesIO as StringIO
-except:
+except ImportError:
     from cStringIO import StringIO
 
 import six
@@ -61,11 +61,11 @@ import matplotlib.style
 
 try:
     import shapely.geometry
-except:
+except ImportError:
     shapely = None
 try:
     import skimage.measure
-except:
+except ImportError:
     skimage = None
 import ipywidgets
 import traitlets
@@ -475,7 +475,9 @@ def plot_mesh(
             try:
                 el = el[0]
                 d += 1
-            except:
+            except Exception as e:
+                print("Error '{}' occured. ".format(e.message) +
+                      "Arguments {}.".format(e.args))
                 break
         return d
 
@@ -774,15 +776,15 @@ def transfer_function(
     # level, opacity and widths can be scalars
     try:
         level[0]
-    except:
+    except TypeError:
         level = [level]
     try:
         opacity[0]
-    except:
+    except TypeError:
         opacity = [opacity] * 3
     try:
         level_width[0]
-    except:
+    except TypeError:
         level_width = [level_width] * 3
         # clip off lists
     min_length = min(len(level), len(level_width), len(opacity))
@@ -1355,8 +1357,9 @@ class style:
                         try:  # threejs doesn't like a color like '.13', so try to convert to proper format
                             value = float(value) * 255
                             value = "rgb(%d, %d, %d)" % (value, value, value)
-                        except:
-                            pass
+                        except Exception as e:
+                            print("Error '{}' occured. ".format(e.message)) +
+                                  "Arguments {}.".format(e.args))
 
                     utils.nested_setitem(style, to_name, value)
             return style

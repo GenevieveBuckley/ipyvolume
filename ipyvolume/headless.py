@@ -73,7 +73,8 @@ def _screenshot_data(
         try:
             url = result["result"]["result"]["value"]
             return url
-        except:
+        except Exception as e:
+            print("Error '{0}' occured. Arguments {1}.".format(e.message, e.args))
             if "ipvss" in result["result"]["result"]["description"]:
                 tries += 1
                 time.sleep(0.5)
