@@ -33,4 +33,4 @@ package_js.version_targets.append(VersionTargetJson(package_js, '{path}/package.
 package_js.release_targets.append(gittag)
 package_js.release_targets.append(ReleaseTargetNpm(package_js))
 # core.release_targets.append(gitpush)
-#package_python.release_targets.append(ReleaseTargetCondaForge(package_python, '../feedstocks/ipyvolume-feedstock'))
+# package_python.release_targets.append(ReleaseTargetCondaForge(package_python, '../feedstocks/ipyvolume-feedstock'))
