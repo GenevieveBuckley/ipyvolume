@@ -102,8 +102,8 @@ def _cube_to_tiles(grid, vmin, vmax):
             if zindex < slices:
                 Im = grid_normalized[zindex]
                 subdata = data[
-                    y2d * Im.shape[0] : (y2d + 1) * Im.shape[0],
-                    x2d * Im.shape[1] : (x2d + 1) * Im.shape[1],
+                    y2d * Im.shape[0]: (y2d + 1) * Im.shape[0],
+                    x2d * Im.shape[1]: (x2d + 1) * Im.shape[1],
                 ]
                 subdata[..., 3] = (Im * 255).astype(np.uint8)
                 for i in range(3):
@@ -142,7 +142,8 @@ def tile_volume(vol, tex_size, tile_shape, vol_size):
             xoffset = tileX * vol_size[0]
             yoffset = tileY * vol_size[1]
             tex[
-                yoffset : yoffset + vol_size[1], xoffset : xoffset + vol_size[0]
+                yoffset: yoffset + vol_size[1],
+                xoffset: xoffset + vol_size[0]
             ] = slice_data
     # debug image saving
     # scipy.misc.toimage(tex, cmin=tex.min(), cmax=tex.max()).save('outfile.png')
