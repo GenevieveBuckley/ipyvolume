@@ -476,8 +476,7 @@ def plot_mesh(
                 el = el[0]
                 d += 1
             except Exception as e:
-                print("Error '{}' occured. ".format(e.message) +
-                      "Arguments {}.".format(e.args))
+                print("Error occured: '{}'.".format(e))
                 break
         return d
 
@@ -1358,8 +1357,7 @@ class style:
                             value = float(value) * 255
                             value = "rgb(%d, %d, %d)" % (value, value, value)
                         except Exception as e:
-                            print("Error '{}' occured. ".format(e.message) +
-                                  "Arguments {}.".format(e.args))
+                            print("Error occured: '{}'.".format(e))
 
                     utils.nested_setitem(style, to_name, value)
             return style

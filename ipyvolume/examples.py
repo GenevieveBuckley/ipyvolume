@@ -15,7 +15,7 @@ try:
     import scipy.ndimage
     import scipy.special
 except Exception as e:
-    print("Error '{0}' occured. Arguments {1}.".format(e.message, e.args))
+    print("Error occured: '{}'.".format(e))
     pass  # it's ok, it's not crucial
 
 # __all__ = ["example_ylm"]

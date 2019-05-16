@@ -267,11 +267,11 @@ def array_sequence_to_binary_or_json(ar, obj=None):
             element = element[0]
             dimension += 1
     except Exception as e:
-        print("Error '{0}' occured. Arguments {1}.".format(e.message, e.args))
+        print("Error occured: '{}'.".format(e))
     try:
         element = element.item()  # for instance get back the value from array(1)
     except Exception as e:
-        print("Error '{0}' occured. Arguments {1}.".format(e.message, e.args))
+        print("Error occured: '{}'.".format(e))
     if isinstance(element, string_types):
         return array_to_json(ar)
     if dimension == 0:  # scalars are passed as is (json), empty lists as well
@@ -298,11 +298,11 @@ def array_to_binary_or_json(ar, obj=None):
             element = element[0]
             dimension += 1
     except Exception as e:
-        print("Error '{0}' occured. Arguments {1}.".format(e.message, e.args))
+        print("Error occured: '{}'.".format(e))
     try:
         element = element.item()  # for instance get back the value from array(1)
     except Exception as e:
-        print("Error '{0}' occured. Arguments {1}.".format(e.message, e.args))
+        print("Error occured: '{}'.".format(e))
     if isinstance(element, string_types):
         return array_to_json(ar)
     if dimension == 0:  # scalars are passed as is (json)
@@ -353,11 +353,11 @@ def color_to_binary_or_json(ar, obj=None):
             element = element[0]
             dimension += 1
     except Exception as e:
-        print("Error '{0}' occured. Arguments {1}.".format(e.message, e.args))
+        print("Error occured: '{}'.".format(e))
     try:
         element = element.item()  # for instance get back the str from array('foo')
     except Exception as e:
-        print("Error '{0}' occured. Arguments {1}.".format(e.message, e.args))
+        print("Error occured: '{}'.".format(e))
     if isinstance(element, string_types):
         return array_to_json(ar)
     if dimension == 0:  # scalars are passed as is (json)

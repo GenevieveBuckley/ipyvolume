@@ -100,7 +100,7 @@ class NPM(Command):
         try:
             check_call([npmName, "--version"])
             return True
-        except:
+        except Exception:
             return False
 
     def should_run_npm_install(self):
