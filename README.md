@@ -137,17 +137,6 @@ $ jupyter nbextension enable --py --sys-prefix ipyvolume
 $ jupyter nbextension enable --py --sys-prefix widgetsnbextension
 ```
 
-## Pip as user: (but really, do not do this)
-
-**You have been warned, do this only if you know what you are doing, this might hunt you in the future, and now is a good time to consider learning virtualenv or conda.**
-
-```
-$ pip install ipyvolume --user
-$ jupyter nbextension enable --py --user ipyvolume
-$ jupyter nbextension enable --py --user widgetsnbextension
-```
-
-
 
 ## Developer installation
 
