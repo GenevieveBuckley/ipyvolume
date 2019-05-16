@@ -7,6 +7,8 @@ import pythreejs
 import ipywebrtc
 from IPython.display import display
 
+__all__ = ["MovieMaker"]
+
 
 class MovieMaker(object):
     def __init__(
