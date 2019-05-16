@@ -1166,7 +1166,7 @@ def _screenshot_data(
             with output_widget:
                 fig.on_screenshot(screenshot_handler, remove=True)
         data = data[0]
-    data = data[data.find(",") + 1 :]
+    data = data[data.find(",") + 1:]
     return base64.b64decode(data)
 
 
