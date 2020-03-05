@@ -13,7 +13,7 @@ from traittypes import Array
 from . import serialize
 import ipyvolume._version
 
-__all__ = ['TransferFunction', 'TransferFunctionWidgetJs3', 'TransferFunctionWidget3']
+__all__ = ['TransferFunction', 'TransferFunctionWidgetJs3']
 
 N = 1024
 x = np.linspace(0, 1, N, endpoint=True)
@@ -49,68 +49,6 @@ class TransferFunctionWidgetJs3(TransferFunction):
         l1 = widgets.FloatSlider(min=0, max=1, step=0.001, value=self.level1)
         l2 = widgets.FloatSlider(min=0, max=1, step=0.001, value=self.level2)
         l3 = widgets.FloatSlider(min=0, max=1, step=0.001, value=self.level3)
-        o1 = widgets.FloatSlider(min=0, max=max_opacity, step=0.001, value=self.opacity1)
-        o2 = widgets.FloatSlider(min=0, max=max_opacity, step=0.001, value=self.opacity2)
-        o3 = widgets.FloatSlider(min=0, max=max_opacity, step=0.001, value=self.opacity2)
-        widgets.jslink((self, 'level1'), (l1, 'value'))
-        widgets.jslink((self, 'level2'), (l2, 'value'))
-        widgets.jslink((self, 'level3'), (l3, 'value'))
-        widgets.jslink((self, 'opacity1'), (o1, 'value'))
-        widgets.jslink((self, 'opacity2'), (o2, 'value'))
-        widgets.jslink((self, 'opacity3'), (o3, 'value'))
-        return widgets.VBox(
-            [
-                widgets.HBox([widgets.Label(value="levels:"), l1, l2, l3]),
-                widgets.HBox([widgets.Label(value="opacities:"), o1, o2, o3]),
-            ]
-        )
-
-
-class TransferFunctionWidget3(TransferFunction):
-    level1 = traitlets.Float(0.1).tag(sync=True)
-    level2 = traitlets.Float(0.5).tag(sync=True)
-    level3 = traitlets.Float(0.8).tag(sync=True)
-    opacity1 = traitlets.Float(0.4).tag(sync=True)
-    opacity2 = traitlets.Float(0.1).tag(sync=True)
-    opacity3 = traitlets.Float(0.1).tag(sync=True)
-    width1 = traitlets.Float(0.1).tag(sync=True)
-    width2 = traitlets.Float(0.1).tag(sync=True)
-    width3 = traitlets.Float(0.1).tag(sync=True)
-
-    def __init__(self, *args, **kwargs):
-        super(TransferFunctionWidget3, self).__init__(*args, **kwargs)
-        N = range(1, 4)
-        self.observe(
-            self.recompute_rgba, ["level%d" % k for k in N] + ["opacity%d" % k for k in N] + ["width%d" % k for k in N]
-        )
-        self.recompute_rgba()
-
-    def recompute_rgba(self, *_ignore):
-        import matplotlib
-        rgba = np.zeros((1024, 4))
-        N = range(1, 4)
-        levels = [getattr(self, "level%d" % k) for k in N]
-        opacities = [getattr(self, "opacity%d" % k) for k in N]
-        widths = [getattr(self, "width%d" % k) for k in N]
-        # print(levels, opacities, widths)
-        colors = [np.array(matplotlib.colors.colorConverter.to_rgb(name)) for name in ["red", "green", "blue"]]
-        # TODO: vectorize
-        for i in range(rgba.shape[0]):
-            position = i / (1023.0)
-            intensity = 0.0
-            # self.rgba[i, 0, :] = 0
-            for j in range(3):
-                intensity = np.exp(-((position - levels[j]) / widths[j]) ** 2)
-                rgba[i, 0:3] += colors[j] * opacities[j] * intensity
-                rgba[i, 3] += opacities[j] * intensity
-            rgba[i, 0:3] /= rgba[i, 0:3].max()
-        rgba = np.clip(rgba, 0, 1)
-        self.rgba = rgba
-
-    def control(self, max_opacity=0.2):
-        l1 = widgets.FloatSlider(min=0, max=1, value=self.level1)
-        l2 = widgets.FloatSlider(min=0, max=1, value=self.level2)
-        l3 = widgets.FloatSlider(min=0, max=1, value=self.level3)
         o1 = widgets.FloatSlider(min=0, max=max_opacity, step=0.001, value=self.opacity1)
         o2 = widgets.FloatSlider(min=0, max=max_opacity, step=0.001, value=self.opacity2)
         o3 = widgets.FloatSlider(min=0, max=max_opacity, step=0.001, value=self.opacity2)
