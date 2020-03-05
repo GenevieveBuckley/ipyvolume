@@ -1,4 +1,4 @@
-"""Generate images from ipyvolume using chrome headless
+r"""Generate images from ipyvolume using chrome headless.
 
 Assuming osx, define the following aliases for convenience, and start in headless mode::
 
@@ -21,12 +21,11 @@ Now run the following snippet (doesn't have to be from the Jupyter notebook) ::
 
 import os
 import time
-import subprocess
 
 import numpy as np
 import PyChromeDevTools
 
-from ipyvolume import pylab
+import ipyvolume as ipv
 
 
 def _get_browser():
@@ -41,7 +40,10 @@ def _get_browser():
             return path
     raise ValueError("no browser found, try setting the IPYVOLUME_HEADLESS_BROWSER environmental variable")
 
-def _screenshot_data(html_filename, timeout_seconds=10, output_widget=None, format="png", width=None, height=None, fig=None):
+
+def _screenshot_data(
+    html_filename, timeout_seconds=10, output_widget=None, format="png", width=None, height=None, fig=None
+):
     # browser = _get_browser()
     # if fig is None:
     #     fig = gcf()
@@ -69,11 +71,13 @@ def _screenshot_data(html_filename, timeout_seconds=10, output_widget=None, form
                 print('error getting result, return value was:', result)
                 raise
 
+
 def _main():
     print(_get_browser())
-    pylab.figure()
-    pylab.scatter(*np.random.random((3,100)))
-    pylab.savefig('test.png', headless=True)
+    ipv.figure()
+    ipv.scatter(*np.random.random((3, 100)))
+    ipv.savefig('test.png', headless=True)
+
 
 if __name__ == "__main__":
     _main()
