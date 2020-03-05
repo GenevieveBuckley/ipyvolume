@@ -50,9 +50,6 @@ class TransferFunctionModel extends widgets.DOMWidgetModel {
             }
         }
         const transfer_function_uint8_array = new Uint8Array(flat_array);
-        // REMOVE: for debugging
-        // window.transfer_function_uint8_array = transfer_function_uint8_array
-        // window.flat_array = flat_array
         return transfer_function_uint8_array;
     }
 }
