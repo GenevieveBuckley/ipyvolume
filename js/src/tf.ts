@@ -57,60 +57,6 @@ class TransferFunctionModel extends widgets.DOMWidgetModel {
     }
 }
 
-export
-class TransferFunctionJsBumpsModel extends TransferFunctionModel {
-
-    constructor(...args) {
-        super(...args);
-        this.on("change:levels", this.recalculate_rgba, this);
-        this.on("change:opacities", this.recalculate_rgba, this);
-        this.on("change:widths", this.recalculate_rgba, this);
-        this.recalculate_rgba();
-    }
-    defaults() {
-        return {
-            ...super.defaults(),
-            _model_name : "TransferFunctionJsBumpsModel",
-            levels: [0.1, 0.5, 0.8],
-            opacities: [0.01, 0.05, 0.1],
-            widths: [0.1, 0.1, 0.1],
-        };
-    }
-
-    recalculate_rgba() {
-        const rgba = [];
-        const colors = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
-        const levels = this.get("levels");
-        const widths = this.get("widths");
-        const opacities = this.get("opacities");
-        (window as any).rgba = rgba;
-        (window as any).tfjs = this;
-        const N = 256;
-        for (let i = 0; i < N; i++) {
-            const x = i / (N - 1);
-            const color = [0, 0, 0, 0]; // red, green, blue and alpha
-            for (let j = 0; j < levels.length; j++) {
-                const basecolor = colors[j];
-                const intensity = Math.exp(-(Math.pow(x - levels[j], 2) / Math.pow(widths[j], 2)));
-                for (let k = 0; k < 3; k++) {
-                  color[k] += (basecolor[k] * intensity * opacities[j]);
-                }
-                color[3] += intensity * opacities[j];
-            }
-            let max_value = color[0];
-            for (let k = 1; k < 3; k++) {
-                max_value = Math.max(max_value, color[k]);
-            }
-            for (let k = 0; k < 3; k++) {
-                color[k] = Math.min(1, color[k] / max_value); // normalize and clip to 1
-            }
-            color[3] = Math.min(1, color[3]); // clip alpha
-            rgba.push(color);
-        }
-        this.set("rgba", rgba);
-        this.save_changes();
-    }
-}
 
 export
 class TransferFunctionWidgetJs3Model extends TransferFunctionModel {
